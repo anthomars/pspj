@@ -51,7 +51,7 @@ Route::middleware('auth.user')->group(function () {
         Route::get('changeStatus', [UserController::class, 'changeStatus'])->name('changeStatusUser');
         Route::get('data', [UserController::class, 'data'])->name('userAccount.dataTable');
         Route::get('', [UserController::class, 'index'])->name('userAccount.index');
-        Route::post('', [UserController::class, 'store']);
+        Route::post('', [UserController::class, 'store'])->name('userAccount.store');
         Route::get('/{admin}', [UserController::class, 'show']);
         Route::post('/{admin}', [UserController::class, 'update']);
         Route::delete('/{admin}', [UserController::class, 'destroy']);

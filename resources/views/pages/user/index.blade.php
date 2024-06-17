@@ -109,10 +109,18 @@
                             <div id="message_phone" class="invalid-feedback"></div>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Password</label>
-                        <input type="text" id="password" name="password" class="form-control" placeholder="Password">
-                        <div id="message_password" class="invalid-feedback"></div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Password</label>
+                            <input type="text" id="password" name="password" class="form-control" placeholder="Password">
+                            <div id="message_password" class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">NIK<span class="form-label-description input-number"></span></label>
+                            <input type="text" id="nik" name="nik" class="form-control number" minlength="8"
+                                maxlength="16" placeholder="NIK">
+                            <div id="message_nik" class="invalid-feedback"></div>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Role</label>
@@ -500,6 +508,7 @@
             $('#fullname').removeClass('is-invalid');
             $('#email').removeClass('is-invalid');
             $('#phone').removeClass('is-invalid');
+            $('#nik').removeClass('is-invalid');
             $('#password').removeClass('is-invalid');
             $('#role_id').removeClass('is-invalid');
             $('#message_photo').css('display', 'none');
@@ -507,6 +516,7 @@
             $('#message_nama_lengkap').css('display', 'none');
             $('#message_email').css('display', 'none');
             $('#message_phone').css('display', 'none');
+            $('#message_nik').css('display', 'none');
             $('#message_role_id').css('display', 'none');
 
             $('#role_id').empty();
@@ -534,11 +544,12 @@
                 let email = $('#email').val();
                 let phone = $('#phone').val();
                 let password = $('#password').val();
+                let nik = $('#nik').val();
                 let role_id = $('#role_id option:selected').val();
                 let is_active = $('#is_active_show_edit').prop('checked') == true ? 1 : 0;
 
                 $.ajax({
-                    url: "{{ url('user-account') }}",
+                    url: "{{ route('userAccount.store') }}",
                     dataType: 'json',
                     type: "POST",
                     data: {
@@ -549,6 +560,7 @@
                         'email': email,
                         'no_hp': phone,
                         'password': password,
+                        'nik': nik,
                         'role_id': role_id,
                         'is_active': is_active
                     },
@@ -564,6 +576,7 @@
                         $('#email').val('');
                         $('#phone').val('');
                         $('#password').val('');
+                        $('#nik').val('');
                         $('#modal-add').modal('hide');
 
                         $('#data-datatable').DataTable().ajax.reload();
@@ -588,7 +601,7 @@
                         })
                     },
                     error: function(xhr) {
-                        console.log(xhr.responseJSON.errors);
+                        console.log(xhr);
                         $('#modal-add').modal('show');
                         if (xhr.responseJSON.errors.username !== undefined) {
                             $('#username').addClass('is-invalid');
@@ -609,6 +622,11 @@
                             $('#phone').addClass('is-invalid');
                             $('#message_phone').css('display', 'inline-block');
                             $('#message_phone').text(xhr.responseJSON.errors.no_hp[0]);
+                        }
+                        if (xhr.responseJSON.errors.nik !== undefined) {
+                            $('#nik').addClass('is-invalid');
+                            $('#message_nik').css('display', 'inline-block');
+                            $('#message_nik').text(xhr.responseJSON.errors.nik[0]);
                         }
                         if (xhr.responseJSON.errors.password !== undefined) {
                             $('#password').addClass('is-invalid');

@@ -130,6 +130,7 @@ class UserController extends Controller
             'email'             => 'required|unique:users,email|email',
             'no_hp'             => 'required|unique:users,no_hp|regex:/^([0-9\s\-\+\(\)]*)$/|min:8',
             'password'          => 'required',
+            'nik'          => 'required',
             'role_id'           => 'required',
         ];
         $message = [
@@ -144,6 +145,7 @@ class UserController extends Controller
             'no_hp.regex' => 'no_hp harus di isi dengan angka.',
             'no_hp.min' => 'no_hp harus di isi minimal 8 Karakter.',
             'password.required' => 'Password harus di isi.',
+            'nik.required' => 'NIK harus di isi.',
             // 'role.required' => 'Role harus di isi.',
             'role_id.required' => 'Role harus di isi.',
         ];
@@ -169,6 +171,7 @@ class UserController extends Controller
         }
 
         $userAuth = Auth::guard('web')->user()->username;
+        $validatedData['date_created'] = now();
         $validatedData['author_create'] = $userAuth;
         $validatedData['author_update'] = $userAuth;
         $validatedData['password'] = Hash::make($validatedData['password']);
