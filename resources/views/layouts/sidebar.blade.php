@@ -146,46 +146,45 @@
                 </span>
             </a>
           </li>
-          <li class="nav-item {{ Request::is('user-account') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ url('user-account') }}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="nav-link-icon d-md-none d-lg-inline-block" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                    <path d="M10 13a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
-                    <path d="M8 21v-1a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v1"></path>
-                    <path d="M15 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
-                    <path d="M17 10h2a2 2 0 0 1 2 2v1"></path>
-                    <path d="M5 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
-                    <path d="M3 13v-1a2 2 0 0 1 2 -2h2"></path>
-                 </svg>
+          <li class="nav-item {{ Request::is('user/profile') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ url('user/profile') }}">
+                <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-user-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" /></svg>
+                </span>
                 <span class="nav-link-title">
-                    User
+                    Profile
                 </span>
             </a>
           </li>
-          <li class="nav-item {{ Request::is('rw') ? 'active' : '' }}">
-            <a class="nav-link" href="">
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#navbar-help" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
                 <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/lifebuoy -->
-                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-user-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="nav-link-icon d-md-none d-lg-inline-block" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M10 13a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
+                        <path d="M8 21v-1a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v1"></path>
+                        <path d="M15 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
+                        <path d="M17 10h2a2 2 0 0 1 2 2v1"></path>
+                        <path d="M5 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
+                        <path d="M3 13v-1a2 2 0 0 1 2 -2h2"></path>
+                    </svg>
                 </span>
-                <div class="d-flex">
-                    <span class="nav-link-title">
-                        RW
-                    </span>
-                </div>
-            </a>
-          </li>
-          <li class="nav-item {{ Request::is('rt') ? 'active' : '' }}">
-            <a class="nav-link" href="">
-                <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/lifebuoy -->
-                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-user-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" /></svg>
+                <span class="nav-link-title">
+                    Master Data
                 </span>
-                <div class="d-flex">
-                    <span class="nav-link-title">
-                        RT
-                    </span>
-                </div>
             </a>
+            <div class="dropdown-menu {{ Request::is('user-account') ? 'show' : '' }}">
+                <a class="dropdown-item {{ Request::is('user-account') ? 'active' : '' }}" href="{{ url('user-account') }}" rel="noopener">
+                    Pengguna
+                </a>
+                <a class="dropdown-item {{ Request::is('master-data/rw') ? 'active' : '' }}" href="{{ url('master-data/rw') }}" rel="noopener">
+                    RW
+                </a>
+
+            </div>
           </li>
+
           <div class="d-flex justify-content-center logo-sidebar">
             <span class="avatar avatar-xl logo-user rounded" id="avatar-xl" style="background-image: url({{ asset('storage/' . appSetting()->logo) }});"></span>
           </div>

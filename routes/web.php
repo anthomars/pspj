@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RwController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -56,5 +57,15 @@ Route::middleware('auth.user')->group(function () {
         Route::post('/{admin}', [UserController::class, 'update']);
         Route::delete('/{admin}', [UserController::class, 'destroy']);
         Route::post('changePassword/{admin}', [UserController::class, 'changePassword']);
+    });
+
+    Route::prefix('master-data')->group(function() {
+        // RW
+        Route::get('rw/data', [RwController::class, 'data'])->name('rw.dataTable');
+        Route::get('rw', [RwController::class, 'index']);
+        Route::post('rw', [RwController::class, 'store']);
+        Route::get('rw/{rw}', [RwController::class, 'show']);
+        Route::put('rw/{rw}', [RwController::class, 'update']);
+        Route::delete('rw/{rw}', [RwController::class, 'destroy']);
     });
 });
