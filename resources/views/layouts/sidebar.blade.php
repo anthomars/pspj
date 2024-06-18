@@ -174,7 +174,7 @@
                     Master Data
                 </span>
             </a>
-            <div class="dropdown-menu {{ Request::is('user-account') ? 'show' : '' }}">
+            <div class="dropdown-menu {{ Request::is('user-account') ? 'show' : '' }} {{ Request::is('master-data/rw') ? 'show' : '' }}">
                 <a class="dropdown-item {{ Request::is('user-account') ? 'active' : '' }}" href="{{ url('user-account') }}" rel="noopener">
                     Pengguna
                 </a>

@@ -64,11 +64,11 @@
           <div id="message_name" class="invalid-feedback"></div>
         </div>
         <div class="mb-3">
-          <label class="form-label">N0. RW</label>
+          <label class="form-label">No. RW</label>
           <input type="text" id="no" name="no" class="form-control number" placeholder="Name">
           <div id="message_no" class="invalid-feedback"></div>
         </div>
-        <div class="mb-3">name
+        <div class="mb-3">
           <label class="form-label">Alamat RW</label>
           <input type="text" id="address" name="address" class="form-control" placeholder="Name">
           <div id="message_address" class="invalid-feedback"></div>
