@@ -177,20 +177,23 @@ class RwController extends Controller
     public function destroy(Request $request, string $id)
     {
 
-        $oldData = Rw::find($id);
-        $delete = Rw::destroy($id);
+        // $oldData = Rw::find($id);
+        // $delete = Rw::destroy($id);
+        $oldData = Rw::where('id_rw', $id)->get();
+        $delete = Rw::where('id_rw', $id)->delete();
+
 
         if($delete) {
             return response()->json([
                 'status' => 'success',
                 'title' => 'Sukses',
-                'message'=>'Data "'.$oldData->name.'" berhasil dihapus!'
+                'message'=>'Data "'.$oldData[0]->nama_rw.'" berhasil dihapus!'
             ]);
         } else {
             return response()->json([
                 'status' => 'error',
                 'title' => 'Gagal!',
-                'message'=>'Data "'.$oldData->name.'" gagal dihapus!'
+                'message'=>'Data "'.$oldData[0]->name_rw.'" gagal dihapus!'
             ], 400);
         }
     }
