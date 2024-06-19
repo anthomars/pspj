@@ -21,7 +21,7 @@ class RwController extends Controller
                     ';
 
                 $btn .= '
-                    <button data-id="'. $row->id .'"  class="dropdown-item" onclick="detailData('. $row->id .')" data-toggle="tooltip" title="Detail">
+                    <button data-id="'. $row->id .'"  class="dropdown-item" onclick="detailData('. $row->id_rw .')" data-toggle="tooltip" title="Detail">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-info-square-rounded me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                             <path d="M12 9h.01"></path>
@@ -34,7 +34,7 @@ class RwController extends Controller
 
                 $btn .= '
                     <div class="dropdown-divider my-1"></div>
-                    <button data-id="'. $row->id .'"  class="dropdown-item text-danger" onclick="deleteData('. $row->id .')" data-toggle="tooltip" title="Delete">
+                    <button data-id="'. $row->id .'"  class="dropdown-item text-danger" onclick="deleteData('. $row->id_rw .')" data-toggle="tooltip" title="Delete">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                             <path d="M4 7l16 0"></path>
@@ -100,7 +100,7 @@ class RwController extends Controller
         if($data['rw']) {
             return response()->json([
                 'status' => 'success',
-                'data' => $data['relationship']
+                'data' => $data['rw']
             ]);
         } else {
             return response()->json([
@@ -113,20 +113,21 @@ class RwController extends Controller
 
     public function update(Request $request, string $id)
     {
+        // dd($request->all(), $id);
         $dataOld = Rw::where('id_rw', $id)->get();
-
+        // dd($dataOld);
         $rules = [];
         $message = [];
 
-        if($dataOld->nama_rw != $request->nama_rw) {
+        if($dataOld[0]->nama_rw != $request->nama_rw) {
             $rules['nama_rw'] = 'required';
             $message['nama_rw.required'] = 'nama_rw harus di isi.';
         }
-        if($dataOld->no_rw != $request->no_rw) {
+        if($dataOld[0]->no_rw != $request->no_rw) {
             $rules['no_rw'] = 'required';
             $message['no_rw.required'] = 'no_rw harus di isi.';
         }
-        if($dataOld->alamat_rw != $request->alamat_rw) {
+        if($dataOld[0]->alamat_rw != $request->alamat_rw) {
             $rules['alamat_rw'] = 'required';
             $message['alamat_rw.required'] = 'alamat_rw harus di isi.';
         }
@@ -134,24 +135,23 @@ class RwController extends Controller
         $validatedData = $request->validate($rules, $message);
 
         if(!$validatedData == NULL) {
-            $update = Rw::where('id_rw', $dataOld->id_rw)->update($validatedData);
+            $update = Rw::where('id_rw', $dataOld[0]->id_rw)->update($validatedData);
             if($update) {
-                // Create Log
-                $dataNew = Rw::where('id_rw', $dataOld->id_rw)->get();
-                if ($dataOld->nama_rw != $request->nama_rw) {
+                $dataNew = Rw::where('id_rw', $dataOld[0]->id_rw)->get();
+                if ($dataOld[0]->nama_rw != $request->nama_rw) {
                     return response()->json([
                         'status' => 'success',
-                        'message'=>'Data "'.$dataNew->nama_rw.'" berhasil diperbarui.<br>Data sebelumnya "'.$dataOld->nama_rw.'".'
+                        'message'=>'Data "'.$dataNew[0]->nama_rw.'" berhasil diperbarui.<br>Data sebelumnya "'.$dataOld[0]->nama_rw.'".'
                     ]);
-                }elseif ($dataOld->no_rw != $request->no_rw) {
+                }elseif ($dataOld[0]->no_rw != $request->no_rw) {
                     return response()->json([
                         'status' => 'success',
-                        'message'=>'Data "'.$dataNew->no_rw.'" berhasil diperbarui.<br>Data sebelumnya "'.$dataOld->no_rw.'".'
+                        'message'=>'Data "'.$dataNew[0]->no_rw.'" berhasil diperbarui.<br>Data sebelumnya "'.$dataOld[0]->no_rw.'".'
                     ]);
-                }elseif ($dataOld->alamat_rw != $request->alamat_rw) {
+                }elseif ($dataOld[0]->alamat_rw != $request->alamat_rw) {
                     return response()->json([
                         'status' => 'success',
-                        'message'=>'Data "'.$dataNew->alamat_rw.'" berhasil diperbarui.<br>Data sebelumnya "'.$dataOld->alamat_rw.'".'
+                        'message'=>'Data "'.$dataNew[0]->alamat_rw.'" berhasil diperbarui.<br>Data sebelumnya "'.$dataOld[0]->alamat_rw.'".'
                     ]);
                 }else {
                     return response()->json([
@@ -163,7 +163,7 @@ class RwController extends Controller
             else {
                 return response()->json([
                     'status' => 'error',
-                    'message'=>'Data "'.$dataOld->name.'" gagal diperbarui!'
+                    'message'=>'Data "'.$dataOld[0]->name.'" gagal diperbarui!'
                 ], 400);
             }
         } else {

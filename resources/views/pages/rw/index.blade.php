@@ -60,17 +60,17 @@
       <div class="modal-body">
         <div class="mb-3">
           <label class="form-label">Nama RW</label>
-          <input type="text" id="name" name="name" class="form-control" placeholder="Name">
+          <input type="text" id="name" name="name" class="form-control" placeholder="Nama">
           <div id="message_name" class="invalid-feedback"></div>
         </div>
         <div class="mb-3">
           <label class="form-label">No. RW</label>
-          <input type="text" id="no" name="no" class="form-control number" placeholder="Name">
+          <input type="text" id="no" name="no" class="form-control number" placeholder="No. RW">
           <div id="message_no" class="invalid-feedback"></div>
         </div>
         <div class="mb-3">
           <label class="form-label">Alamat RW</label>
-          <input type="text" id="address" name="address" class="form-control" placeholder="Name">
+          <input type="text" id="address" name="address" class="form-control" placeholder="Alamat">
           <div id="message_address" class="invalid-feedback"></div>
         </div>
 
@@ -340,13 +340,13 @@
           '_token' : '{{ csrf_token() }}'
         },
         success: function(datas){
-          // console.log(datas);
-          $('#name_show_edit').val(datas.data.nama_rw);
-          $('#no_show_edit').val(datas.data.no_rw);
-          $('#address_show_edit').val(datas.data.alamat_rw);
+        //   console.log(datas);
+          $('#name_show_edit').val(datas.data[0].nama_rw);
+          $('#no_show_edit').val(datas.data[0].no_rw);
+          $('#address_show_edit').val(datas.data[0].alamat_rw);
 
-          $('#button_update').data('id',datas.data.id)
-          $('#button_delete').data('id',datas.data.id)
+          $('#button_update').data('id',datas.data[0].id_rw)
+          $('#button_delete').data('id',datas.data[0].id_rw)
 
           modalDetail.show();
         },
