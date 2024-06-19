@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Rw;
+use App\Models\Rt;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
-class RwController extends Controller
+class RtController extends Controller
 {
     public function data()
     {
-        $data = Rw::orderBy('id_rw','desc');
+        $data = Rt::orderBy('id_rt','desc');
 
         return DataTables::of($data)->addIndexColumn()
             ->addColumn('action', function($row){
@@ -21,7 +21,7 @@ class RwController extends Controller
                     ';
 
                 $btn .= '
-                    <button data-id="'. $row->id_rw .'"  class="dropdown-item" onclick="detailData('. $row->id_rw .')" data-toggle="tooltip" title="Detail">
+                    <button data-id="'. $row->id_rt .'"  class="dropdown-item" onclick="detailData('. $row->id_rt .')" data-toggle="tooltip" title="Detail">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-info-square-rounded me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                             <path d="M12 9h.01"></path>
@@ -34,7 +34,7 @@ class RwController extends Controller
 
                 $btn .= '
                     <div class="dropdown-divider my-1"></div>
-                    <button data-id="'. $row->id_rw .'"  class="dropdown-item text-danger" onclick="deleteData('. $row->id_rw .')" data-toggle="tooltip" title="Delete">
+                    <button data-id="'. $row->id_rt .'"  class="dropdown-item text-danger" onclick="deleteData('. $row->id_rt .')" data-toggle="tooltip" title="Delete">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                             <path d="M4 7l16 0"></path>
@@ -60,24 +60,25 @@ class RwController extends Controller
 
     public function index()
     {
-        return view('pages.rw.index');
+        return view('pages.rt.index');
     }
 
     public function store(Request $request)
     {
         $rules = [
-            'nama_rw'  => 'required',
-            'no_rw'  => 'required',
-            'alamat_rw'  => 'required',
+            'nama_rt'  => 'required',
+            'no_rt'  => 'required',
+            'alamat_rt'  => 'required',
+            'rw_id'  => 'required',
         ];
         $message = [
-            'nama_rw.required' => 'Nama RW harus di isi.',
-            'no_rw.required' => 'No. RW harus di isi.',
-            'alamat_rw.required' => 'Alamat RW harus di isi.',
+            'nama_rt.required' => 'Nama RT harus di isi.',
+            'no_rt.required' => 'No. RT harus di isi.',
+            'rw_id.required' => 'RW Id harus di isi.',
         ];
         $validatedData = $request->validate($rules, $message);
 
-        $create = Rw::create($validatedData);
+        $create = Rt::create($validatedData);
 
         if($create) {
             return response()->json([
@@ -95,12 +96,12 @@ class RwController extends Controller
 
     public function show(Request $request, string $id)
     {
-        $data['rw'] = Rw::where('id_rw', $id)->get();
+        $data['rt'] = Rt::where('id_rt', $id)->get();
 
-        if($data['rw']) {
+        if($data['rt']) {
             return response()->json([
                 'status' => 'success',
-                'data' => $data['rw']
+                'data' => $data['rt']
             ]);
         } else {
             return response()->json([
@@ -114,44 +115,44 @@ class RwController extends Controller
     public function update(Request $request, string $id)
     {
         // dd($request->all(), $id);
-        $dataOld = Rw::where('id_rw', $id)->get();
+        $dataOld = Rt::where('id_rt', $id)->get();
         // dd($dataOld);
         $rules = [];
         $message = [];
 
-        if($dataOld[0]->nama_rw != $request->nama_rw) {
-            $rules['nama_rw'] = 'required';
-            $message['nama_rw.required'] = 'nama_rw harus di isi.';
+        if($dataOld[0]->nama_rt != $request->nama_rt) {
+            $rules['nama_rt'] = 'required';
+            $message['nama_rt.required'] = 'nama_rt harus di isi.';
         }
-        if($dataOld[0]->no_rw != $request->no_rw) {
-            $rules['no_rw'] = 'required';
-            $message['no_rw.required'] = 'no_rw harus di isi.';
+        if($dataOld[0]->no_rt != $request->no_rt) {
+            $rules['no_rt'] = 'required';
+            $message['no_rt.required'] = 'no_rt harus di isi.';
         }
-        if($dataOld[0]->alamat_rw != $request->alamat_rw) {
-            $rules['alamat_rw'] = 'required';
-            $message['alamat_rw.required'] = 'alamat_rw harus di isi.';
+        if($dataOld[0]->alamat_rt != $request->alamat_rt) {
+            $rules['alamat_rt'] = 'required';
+            $message['alamat_rt.required'] = 'alamat_rt harus di isi.';
         }
 
         $validatedData = $request->validate($rules, $message);
 
         if(!$validatedData == NULL) {
-            $update = Rw::where('id_rw', $dataOld[0]->id_rw)->update($validatedData);
+            $update = Rt::where('id_rt', $dataOld[0]->id_rt)->update($validatedData);
             if($update) {
-                $dataNew = Rw::where('id_rw', $dataOld[0]->id_rw)->get();
-                if ($dataOld[0]->nama_rw != $request->nama_rw) {
+                $dataNew = Rt::where('id_rt', $dataOld[0]->id_rt)->get();
+                if ($dataOld[0]->nama_rt != $request->nama_rt) {
                     return response()->json([
                         'status' => 'success',
-                        'message'=>'Data "'.$dataNew[0]->nama_rw.'" berhasil diperbarui.<br>Data sebelumnya "'.$dataOld[0]->nama_rw.'".'
+                        'message'=>'Data "'.$dataNew[0]->nama_rt.'" berhasil diperbarui.<br>Data sebelumnya "'.$dataOld[0]->nama_rt.'".'
                     ]);
-                }elseif ($dataOld[0]->no_rw != $request->no_rw) {
+                }elseif ($dataOld[0]->no_rt != $request->no_rt) {
                     return response()->json([
                         'status' => 'success',
-                        'message'=>'Data "'.$dataNew[0]->no_rw.'" berhasil diperbarui.<br>Data sebelumnya "'.$dataOld[0]->no_rw.'".'
+                        'message'=>'Data "'.$dataNew[0]->no_rt.'" berhasil diperbarui.<br>Data sebelumnya "'.$dataOld[0]->no_rt.'".'
                     ]);
-                }elseif ($dataOld[0]->alamat_rw != $request->alamat_rw) {
+                }elseif ($dataOld[0]->alamat_rt != $request->alamat_rt) {
                     return response()->json([
                         'status' => 'success',
-                        'message'=>'Data "'.$dataNew[0]->alamat_rw.'" berhasil diperbarui.<br>Data sebelumnya "'.$dataOld[0]->alamat_rw.'".'
+                        'message'=>'Data "'.$dataNew[0]->alamat_rt.'" berhasil diperbarui.<br>Data sebelumnya "'.$dataOld[0]->alamat_rt.'".'
                     ]);
                 }else {
                     return response()->json([
@@ -163,7 +164,7 @@ class RwController extends Controller
             else {
                 return response()->json([
                     'status' => 'error',
-                    'message'=>'Data "'.$dataOld[0]->nama_rw.'" gagal diperbarui!'
+                    'message'=>'Data "'.$dataOld[0]->nama_rt.'" gagal diperbarui!'
                 ], 400);
             }
         } else {
@@ -177,35 +178,23 @@ class RwController extends Controller
     public function destroy(Request $request, string $id)
     {
 
-        // $oldData = Rw::find($id);
-        // $delete = Rw::destroy($id);
-        $oldData = Rw::where('id_rw', $id)->get();
-        $delete = Rw::where('id_rw', $id)->delete();
+        $oldData = Rt::where('id_rt', $id)->get();
+        $delete = Rt::where('id_rt', $id)->delete();
 
 
         if($delete) {
             return response()->json([
                 'status' => 'success',
                 'title' => 'Sukses',
-                'message'=>'Data "'.$oldData[0]->nama_rw.'" berhasil dihapus!'
+                'message'=>'Data "'.$oldData[0]->nama_rt.'" berhasil dihapus!'
             ]);
         } else {
             return response()->json([
                 'status' => 'error',
                 'title' => 'Gagal!',
-                'message'=>'Data "'.$oldData[0]->name_rw.'" gagal dihapus!'
+                'message'=>'Data "'.$oldData[0]->name_rt.'" gagal dihapus!'
             ], 400);
         }
-    }
-
-    public function getRw()
-    {
-        $rw = Rw::all();
-
-        return response()->json([
-            'status' => 'success',
-            'data' => $rw
-        ]);
     }
 
 }

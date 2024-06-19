@@ -900,7 +900,6 @@
         function getDataRole(item, index) {
             dataRole += `<option value="${item.id_role}">${item.nama_role}</option>`;
         }
-        console.log(dataRole);
 
         $('#role_id_show_edit').append(dataRole);
 

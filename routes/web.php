@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RtController;
 use App\Http\Controllers\RwController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
@@ -61,11 +62,20 @@ Route::middleware('auth.user')->group(function () {
 
     Route::prefix('master-data')->group(function() {
         // RW
+        Route::get('rw/getRole', [RwController::class, 'getRw'])->name('rw.getRw');
         Route::get('rw/data', [RwController::class, 'data'])->name('rw.dataTable');
         Route::get('rw', [RwController::class, 'index']);
         Route::post('rw', [RwController::class, 'store']);
         Route::get('rw/{rw}', [RwController::class, 'show']);
         Route::put('rw/{rw}', [RwController::class, 'update']);
         Route::delete('rw/{rw}', [RwController::class, 'destroy']);
+
+        // RT
+        Route::get('rt/data', [RtController::class, 'data'])->name('rt.dataTable');
+        Route::get('rt', [RtController::class, 'index']);
+        Route::post('rt', [RtController::class, 'store']);
+        Route::get('rt/{rt}', [RtController::class, 'show']);
+        Route::put('rt/{rt}', [RtController::class, 'update']);
+        Route::delete('rt/{rt}', [RtController::class, 'destroy']);
     });
 });

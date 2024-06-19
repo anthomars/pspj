@@ -174,12 +174,15 @@
                     Master Data
                 </span>
             </a>
-            <div class="dropdown-menu {{ Request::is('user-account') ? 'show' : '' }} {{ Request::is('master-data/rw') ? 'show' : '' }}">
+            <div class="dropdown-menu {{ Request::is('user-account') ? 'show' : '' }} {{ Request::is('master-data/rw') ? 'show' : '' }} {{ Request::is('master-data/rt') ? 'show' : '' }}">
                 <a class="dropdown-item {{ Request::is('user-account') ? 'active' : '' }}" href="{{ url('user-account') }}" rel="noopener">
                     Pengguna
                 </a>
                 <a class="dropdown-item {{ Request::is('master-data/rw') ? 'active' : '' }}" href="{{ url('master-data/rw') }}" rel="noopener">
                     RW
+                </a>
+                <a class="dropdown-item {{ Request::is('master-data/rt') ? 'active' : '' }}" href="{{ url('master-data/rt') }}" rel="noopener">
+                    RT
                 </a>
 
             </div>
