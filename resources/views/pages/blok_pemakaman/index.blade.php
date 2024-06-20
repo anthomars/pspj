@@ -62,17 +62,17 @@
         <div class="mb-3">
           <label class="form-label">Nama Blok</label>
           <input type="text" id="blok" class="form-control" placeholder="Nama Blok">
-          <div id="message_name" class="invalid-feedback"></div>
+          <div id="message_blok" class="invalid-feedback"></div>
         </div>
         <div class="mb-3">
           <label class="form-label">Kapasitas</label>
           <input type="text" id="kapasitas" class="form-control number" placeholder="Kapasitas">
-          <div id="message_no" class="invalid-feedback"></div>
+          <div id="message_kapasitas" class="invalid-feedback"></div>
         </div>
         <div class="mb-3">
           <label class="form-label">Nama PIC</label>
           <input type="text" id="pic" class="form-control" placeholder="Nama PIC">
-          <div id="message_address" class="invalid-feedback"></div>
+          <div id="message_pic" class="invalid-feedback"></div>
         </div>
         <div class="mb-3">
             <label class="form-label">HP PIC <span class="form-label-description input-number"></span></label>
@@ -107,20 +107,27 @@
       </div>
       <div class="modal-body">
         <div class="mb-3">
-          <label class="form-label">Nama RW</label>
-          <input type="text" id="name_show_edit" class="form-control" placeholder="Nama RW" value="" disabled/>
-          <div class="invalid-feedback" id="message_name_show_edit" style="display: none"></div>
+          <label class="form-label">Nama Blok</label>
+          <input type="text" id="blok_show_edit" class="form-control" placeholder="Blok" value="" disabled/>
+          <div class="invalid-feedback" id="message_blok_show_edit" style="display: none"></div>
         </div>
         <div class="mb-3">
-          <label class="form-label">No RW</label>
-          <input type="text" id="no_show_edit" class="form-control" placeholder="No. RW" value="" disabled/>
-          <div class="invalid-feedback" id="message_no_show_edit" style="display: none"></div>
+          <label class="form-label">Kapasitas</label>
+          <input type="text" id="kapasitas_show_edit" class="form-control number" placeholder="Kapasitas" value="" disabled/>
+          <div class="invalid-feedback" id="message_kapasitas_show_edit" style="display: none"></div>
         </div>
         <div class="mb-3">
-          <label class="form-label">Alamat RW</label>
-          <input type="text" id="address_show_edit" class="form-control" placeholder="Alamat RW" value="" disabled/>
-          <div class="invalid-feedback" id="message_address_show_edit" style="display: none"></div>
+          <label class="form-label">Nama PIC</label>
+          <input type="text" id="pic_show_edit" class="form-control" placeholder="Nama PIC" value="" disabled/>
+          <div class="invalid-feedback" id="message_pic_show_edit" style="display: none"></div>
         </div>
+        <div class="mb-3">
+            <label class="form-label">HP PIC <span class="form-label-description input-number"></span></label>
+            <input type="text" id="phone_show_edit" class="form-control number" minlength="8"
+                maxlength="15" placeholder="Phone Number">
+            <div id="message_phone_show_edit" class="invalid-feedback"></div>
+        </div>
+
       </div>
       <div class="modal-footer">
         <button class="btn btn-link link-secondary" data-bs-dismiss="modal">
@@ -212,19 +219,21 @@
 
     $(function () {
       $('#addBtn').click(function (e) {
-        let name = $('#name').val();
-        let no = $('#no').val();
-        let address = $('#address').val();
+        let name = $('#blok').val();
+        let kapasitas = $('#kapasitas').val();
+        let pic = $('#pic').val();
+        let phone = $('#phone').val();
 
         $.ajax({
-            url: "{{ url('master-data/rw') }}",
+            url: "{{ url('master-data/blok') }}",
             dataType: 'json',
             type: "POST",
             data: {
                 '_token' : '{{ csrf_token() }}',
-                'nama_rw' : name,
-                'no_rw' : no,
-                'alamat_rw' : address,
+                'nama_blok_pemakaman' : name,
+                'kapasitas' : kapasitas,
+                'nama_pic_blok' : pic,
+                'hp_pic' : phone
             },
             beforeSend: function() {
                 $('.overlay_submit_loading').addClass('show_loading');
@@ -233,9 +242,10 @@
                 $('#addBtn').addClass('d-none');
             },
             success: function (data) {
-                $('#name').val('');
-                $('#no').val('');
-                $('#address').val('');
+                $('#blok').val('');
+                $('#kapasitas').val('');
+                $('#pic').val('');
+                $('#phone').val('');
                 $('#modal-add').modal('hide');
 
                 $('#data-datatable').DataTable().ajax.reload();
@@ -261,20 +271,25 @@
             error: function (xhr) {
             //   console.log(xhr);
               $('#modal-add').modal('show');
-              if (xhr.responseJSON.errors.nama_rw !== undefined) {
-                  $('#name').addClass('is-invalid');
-                  $('#message_name').css('display','inline-block');
-                  $('#message_name').text(xhr.responseJSON.errors.nama_rw[0]);
+              if (xhr.responseJSON.errors.nama_blok_pemakaman !== undefined) {
+                  $('#blok').addClass('is-invalid');
+                  $('#message_blok').css('display','inline-block');
+                  $('#message_blok').text(xhr.responseJSON.errors.nama_blok_pemakaman[0]);
               }
-              if (xhr.responseJSON.errors.no_rw !== undefined) {
-                  $('#no').addClass('is-invalid');
-                  $('#message_no').css('display','inline-block');
-                  $('#message_no').text(xhr.responseJSON.errors.no_rw[0]);
+              if (xhr.responseJSON.errors.kapasitas !== undefined) {
+                  $('#kapasitas').addClass('is-invalid');
+                  $('#message_kapasitas').css('display','inline-block');
+                  $('#message_kapasitas').text(xhr.responseJSON.errors.kapasitas[0]);
               }
-              if (xhr.responseJSON.errors.alamat_rw !== undefined) {
-                  $('#address').addClass('is-invalid');
-                  $('#message_address').css('display','inline-block');
-                  $('#message_address').text(xhr.responseJSON.errors.alamat_rw[0]);
+              if (xhr.responseJSON.errors.nama_pic_blok !== undefined) {
+                  $('#pic').addClass('is-invalid');
+                  $('#message_pic').css('display','inline-block');
+                  $('#message_pic').text(xhr.responseJSON.errors.nama_pic_blok[0]);
+              }
+              if (xhr.responseJSON.errors.hp_pic !== undefined) {
+                  $('#phone').addClass('is-invalid');
+                  $('#message_phone').css('display','inline-block');
+                  $('#message_phone').text(xhr.responseJSON.errors.hp_pic[0]);
               }
             },
             complete: function() {
@@ -373,7 +388,7 @@
       let url = "{!! url('/master-data/rw/"+id+"') !!}";
       let name = $('#name_show_edit').val();
       let no = $('#no_show_edit').val();
-      let address = $('#address_show_edit').val();
+      let pic = $('#address_show_edit').val();
 
       $.ajax({
         url: url,
