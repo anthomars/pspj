@@ -187,9 +187,10 @@
           { "data" : "id_blok_pemakaman", "render": function (data, type, row, meta) {
               return meta.row + meta.settings._iDisplayStart + 1;
           }, width: '50px'  },
-          { data: 'nama_rw', name: 'nama_rw' },
-          { data: 'no_rw', name: 'no_rw' },
-          { data: 'alamat_rw', name: 'alamat_rw' },
+          { data: 'nama_blok_pemakaman', name: 'nama_blok_pemakaman' },
+          { data: 'kapasitas', name: 'kapasitas' },
+          { data: 'nama_pic_blok', name: 'nama_pic_blok' },
+          { data: 'hp_pic', name: 'hp_pic' },
           { data: 'action', name: 'action', orderable: false, searchable: false, width: '20px'},
         ],
         "search": {
@@ -305,20 +306,21 @@
   </script>
   <script>
     $('#modal-detail').on('hidden.bs.modal', function () {
-      $('#title').text('RW Detail');
+      $('#title').text('Blok Detail');
 
-      $('#name_show_edit').prop('disabled',true);
-      $('#no_show_edit').prop('disabled',true);
-      $('#address_show_edit').prop('disabled',true);
+      $('#blok_show_edit').prop('disabled',true);
+      $('#kapasitas_show_edit').prop('disabled',true);
+      $('#pic_show_edit').prop('disabled',true);
+      $('#phone_show_edit').prop('disabled',true);
 
-      $('#name_show_edit').removeClass('is-invalid');
-      $('#message_name_show_edit').css('display','none');
-      $('#no_show_edit').removeClass('is-invalid');
-      $('#message_no_show_edit').css('display','none');
-      $('#address_show_edit').removeClass('is-invalid');
-      $('#message_address_show_edit').css('display','none');
-
-      $('.user_info').removeClass('d-none');
+      $('#blok_show_edit').removeClass('is-invalid');
+      $('#message_blok_show_edit').css('display','none');
+      $('#kapasitas_show_edit').removeClass('is-invalid');
+      $('#message_kapasitas_show_edit').css('display','none');
+      $('#pic_show_edit').removeClass('is-invalid');
+      $('#message_pic_show_edit').css('display','none');
+      $('#phone_show_edit').removeClass('is-invalid');
+      $('#message_phone_show_edit').css('display','none');
 
       $('#button_delete').removeClass('d-none');
       $('#button_edit').removeClass('d-none');
@@ -326,17 +328,16 @@
     });
 
     $("#button_edit").on("click", function() {
-      $('#title').text('RW Edit');
+      $('#title').text('Blok Edit');
 
-      $('#name_show_edit').prop('disabled',false);
-      $('#no_show_edit').prop('disabled',false);
-      $('#address_show_edit').prop('disabled',false);
+      $('#blok_show_edit').prop('disabled',false);
+      $('#kapasitas_show_edit').prop('disabled',false);
+      $('#pic_show_edit').prop('disabled',false);
+      $('#phone_show_edit').prop('disabled',false);
 
       $('#button_delete').addClass('d-none');
       $('#button_edit').addClass('d-none');
       $('#button_update').removeClass('d-none');
-
-      $('.user_info').addClass('d-none');
     });
 
     $("#button_delete").on("click", function(e) {
@@ -350,9 +351,9 @@
         keyboard: false
       })
 
-      $('#title').text('RW Detail');
+      $('#title').text('Blok Detail');
 
-      let url = "{!! url('master-data/rw/"+id+"') !!}";
+      let url = "{!! url('master-data/blok/"+id+"') !!}";
 
       $.ajax({
         type: "GET",
@@ -363,12 +364,13 @@
         },
         success: function(datas){
         //   console.log(datas);
-          $('#name_show_edit').val(datas.data[0].nama_rw);
-          $('#no_show_edit').val(datas.data[0].no_rw);
-          $('#address_show_edit').val(datas.data[0].alamat_rw);
+          $('#blok_show_edit').val(datas.data[0].nama_blok_pemakaman);
+          $('#kapasitas_show_edit').val(datas.data[0].kapasitas);
+          $('#pic_show_edit').val(datas.data[0].nama_pic_blok);
+          $('#phone_show_edit').val(datas.data[0].hp_pic);
 
-          $('#button_update').data('id',datas.data[0].id_rw)
-          $('#button_delete').data('id',datas.data[0].id_rw)
+          $('#button_update').data('id',datas.data[0].id_blok_pemakaman)
+          $('#button_delete').data('id',datas.data[0].id_blok_pemakaman)
 
           modalDetail.show();
         },
@@ -385,10 +387,11 @@
 
     $('#button_update').click(function (e) {
       let id = $('#button_update').data('id');
-      let url = "{!! url('/master-data/rw/"+id+"') !!}";
-      let name = $('#name_show_edit').val();
-      let no = $('#no_show_edit').val();
-      let pic = $('#address_show_edit').val();
+      let url = "{!! url('/master-data/blok/"+id+"') !!}";
+      let blok = $('#blok_show_edit').val();
+      let kapasitas = $('#kapasitas_show_edit').val();
+      let pic = $('#pic_show_edit').val();
+      let phone = $('#phone_show_edit').val();
 
       $.ajax({
         url: url,
@@ -396,18 +399,20 @@
         type: "put",
         data: {
           '_token' : '{{ csrf_token() }}',
-          'nama_rw' : name,
-          'no_rw' : no,
-          'alamat_rw' : address,
+          'nama_blok_pemakaman' : blok,
+          'kapasitas' : kapasitas,
+          'nama_pic_blok' : pic,
+          'hp_pic' : phone
         },
         beforeSend: function() {
           $('.overlay_submit_loading').addClass('show_loading');
           $('.spanner_submit_loading').addClass('show_loading');
         },
         success: function (data) {
-          $('#name_show_edit').val('');
-          $('#no_show_edit').val('');
-          $('#address_show_edit').val('');
+          $('#blok_show_edit').val('');
+          $('#kapasitas_show_edit').val('');
+          $('#pic_show_edit').val('');
+          $('#phone_show_edit').val('');
           $('#modal-detail').modal('hide');
 
           $('#data-datatable').DataTable().ajax.reload();
@@ -447,20 +452,25 @@
 
           // console.log(xhr);
           if(xhr.responseJSON.errors){
-            if (xhr.responseJSON.errors.nama_rw !== undefined) {
-                $('#name_show_edit').addClass('is-invalid');
-                $('#message_name_show_edit').css('display','inline-block');
-                $('#message_name_show_edit').text(xhr.responseJSON.errors.nama_rw[0]);
+            if (xhr.responseJSON.errors.nama_blok_pemakaman !== undefined) {
+                $('#blok_show_edit').addClass('is-invalid');
+                $('#message_blok_show_edit').css('display','inline-block');
+                $('#message_blok_show_edit').text(xhr.responseJSON.errors.nama_blok_pemakaman[0]);
             }
-            if (xhr.responseJSON.errors.no_rw !== undefined) {
-                $('#no_show_edit').addClass('is-invalid');
-                $('#message_no_show_edit').css('display','inline-block');
-                $('#message_no_show_edit').text(xhr.responseJSON.errors.no_rw[0]);
+            if (xhr.responseJSON.errors.kapasitas !== undefined) {
+                $('#kapasitas_show_edit').addClass('is-invalid');
+                $('#message_kapasitas_show_edit').css('display','inline-block');
+                $('#message_kapasitas_show_edit').text(xhr.responseJSON.errors.kapasitas[0]);
             }
-            if (xhr.responseJSON.errors.alamat_rw !== undefined) {
-                $('#address_show_edit').addClass('is-invalid');
-                $('#message_address_show_edit').css('display','inline-block');
-                $('#message_address_show_edit').text(xhr.responseJSON.errors.alamat_rw[0]);
+            if (xhr.responseJSON.errors.nama_pic_blok !== undefined) {
+                $('#pic_show_edit').addClass('is-invalid');
+                $('#message_pic_show_edit').css('display','inline-block');
+                $('#message_pic_show_edit').text(xhr.responseJSON.errors.nama_pic_blok[0]);
+            }
+            if (xhr.responseJSON.errors.hp_pic !== undefined) {
+                $('#phone_show_edit').addClass('is-invalid');
+                $('#message_phone_show_edit').css('display','inline-block');
+                $('#message_phone_show_edit').text(xhr.responseJSON.errors.hp_pic[0]);
             }
           }
         },
@@ -486,7 +496,7 @@
               cancelButtonText: 'Batal'
             }).then((result) => {
               if (result.isConfirmed) {
-                let url = "{!! url('/master-data/rw/"+id+"') !!}";
+                let url = "{!! url('/master-data/blok/"+id+"') !!}";
 
                 $.ajax({
                   type: "DELETE",
@@ -519,4 +529,42 @@
             })
     }
   </script>
+    <script>
+        $(document).ready(function() {
+            $('.number').keypress(function(e) {
+                var charCode = (e.which) ? e.which : event.keyCode
+                if (String.fromCharCode(charCode).match(/[^0-9]/g))
+                    return false;
+            });
+        });
+
+        $(".number").on('focus keyup', function() {
+            var $input = $(this);
+            var value = $input.val();
+            var maxLength = parseInt($input.attr('maxlength'));
+            var remainingLength = maxLength - value.length;
+            if (remainingLength < 0) {
+                $input.val(value.substr(0, maxLength));
+                remainingLength = 0;
+            }
+            // $input.next().show().text(remainingLength);
+            $(".input-number").text(remainingLength);
+        });
+
+        $(".input-number").focusout(function() {
+            $(this).next().text('');
+        });
+
+        $('.show_password').mousedown(function() {
+            $('.eyes_not_show').addClass('d-none');
+            $('.eyes_show').removeClass('d-none');
+            $('#new_password').attr('type', 'text');
+        });
+
+        $('.show_password').mouseup(function() {
+            $('.eyes_show').addClass('d-none');
+            $('.eyes_not_show').removeClass('d-none');
+            $('#new_password').attr('type', 'password');
+        });
+    </script>
 @endpush

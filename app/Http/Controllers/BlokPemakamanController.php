@@ -65,14 +65,15 @@ class BlokPemakamanController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $rules = [
-            'nama_blok_pemakaman'  => 'required|unique:tbl_blok_pemakaman',
+            'nama_blok_pemakaman'  => 'required|unique:tbl_blok_pemakaman,nama_blok_pemakaman',
             'kapasitas'  => 'required',
             'nama_pic_blok'  => 'required',
-            'hp_pic'  => 'required\unique:tbl_blok_pemakaman,hp_pic|regex:/^([0-9\s\-\+\(\)]*)$/|min:8',
+            'hp_pic'  => 'required|unique:tbl_blok_pemakaman,hp_pic|regex:/^([0-9\s\-\+\(\)]*)$/|min:8',
         ];
         $message = [
-            'nama_blok_pemakaman.required' => 'Nama RT harus di isi.',
+            'nama_blok_pemakaman.required' => 'Nama Blok harus di isi.',
             'nama_blok_pemakaman.unique' => 'Blok Sudah digunakan.',
             'kapasitas.required' => 'Kapasitas harus di isi.',
             'nama_pic_blok.required' => 'Nama PIC Blok harus di isi.',
@@ -88,20 +89,20 @@ class BlokPemakamanController extends Controller
         if($create) {
             return response()->json([
                 'status'=>'success',
-                'message'=>'Data "'.$create->nama_rw.'" berhasil ditambahkan!'
+                'message'=>'Data "'.$create->nama_blok_pemakaman.'" berhasil ditambahkan!'
             ]);
         }
         else {
             return response()->json([
                 'status'=>'error',
-                'message'=>'Data "'.$request->nama_rw.'" gagal ditambahkan!'
+                'message'=>'Data "'.$request->nama_blok_pemakaman.'" gagal ditambahkan!'
             ], 400);
         }
     }
 
     public function show(Request $request, string $id)
     {
-        $data['blok'] = BlokPemakaman::where('id_rt', $id)->get();
+        $data['blok'] = BlokPemakaman::where('id_blok_pemakaman', $id)->get();
 
         if($data['blok']) {
             return response()->json([
@@ -119,7 +120,7 @@ class BlokPemakamanController extends Controller
 
     public function update(Request $request, string $id)
     {
-        $dataOld = BlokPemakaman::where('id_rt', $id)->get();
+        $dataOld = BlokPemakaman::where('id_blok_pemakaman', $id)->get();
         $rules = [];
         $message = [];
 
@@ -135,7 +136,7 @@ class BlokPemakamanController extends Controller
             $rules['nama_pic_blok'] = 'required';
             $message['nama_pic_blok.required'] = 'nama_pic_blok harus di isi.';
         }
-        if($dataOld->hp_pic != $request->hp_pic) {
+        if($dataOld[0]->hp_pic != $request->hp_pic) {
             $rules['hp_pic'] = 'required|unique:tbl_blok_pemakaman,hp_pic';
             $message['hp_pic.required'] = 'HP PIC harus di isi.';
             $message['hp_pic.unique'] = 'HP PIC sudah digunakan.';
