@@ -8,6 +8,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\BlokPemakamanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,5 +78,13 @@ Route::middleware('auth.user')->group(function () {
         Route::get('rt/{rt}', [RtController::class, 'show']);
         Route::put('rt/{rt}', [RtController::class, 'update']);
         Route::delete('rt/{rt}', [RtController::class, 'destroy']);
+
+        // Blok
+        Route::get('blok/data', [BlokPemakamanController::class, 'data'])->name('blok.dataTable');
+        Route::get('blok', [BlokPemakamanController::class, 'index']);
+        Route::post('blok', [BlokPemakamanController::class, 'store']);
+        Route::get('blok/{blok}', [BlokPemakamanController::class, 'show']);
+        Route::put('blok/{blok}', [BlokPemakamanController::class, 'update']);
+        Route::delete('blok/{blok}', [BlokPemakamanController::class, 'destroy']);
     });
 });
