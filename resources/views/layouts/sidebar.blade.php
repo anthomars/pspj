@@ -175,14 +175,14 @@
                 </span>
             </a>
             <div class="dropdown-menu {{ Request::is('user-account') ? 'show' : '' }} {{ Request::is('master-data/rw') ? 'show' : '' }} {{ Request::is('master-data/rt') ? 'show' : '' }} {{ Request::is('master-data/blok') ? 'show' : '' }}">
-                <a class="dropdown-item {{ Request::is('user-account') ? 'active' : '' }}" href="{{ url('user-account') }}" rel="noopener">
-                    Pengguna
-                </a>
                 <a class="dropdown-item {{ Request::is('master-data/rw') ? 'active' : '' }}" href="{{ url('master-data/rw') }}" rel="noopener">
                     RW
                 </a>
                 <a class="dropdown-item {{ Request::is('master-data/rt') ? 'active' : '' }}" href="{{ url('master-data/rt') }}" rel="noopener">
                     RT
+                </a>
+                <a class="dropdown-item {{ Request::is('user-account') ? 'active' : '' }}" href="{{ url('user-account') }}" rel="noopener">
+                    Pengguna
                 </a>
                 <a class="dropdown-item {{ Request::is('master-data/blok') ? 'active' : '' }}" href="{{ url('master-data/blok') }}" rel="noopener">
                     Blok Pemakaman
@@ -199,3 +199,14 @@
     </div>
 
   </aside>
+
+  @push('js')
+    <script>
+        $('.nav-link.dropdown-toggle').on('click', function() {
+            $(this).toggleClass('changed');
+        });
+        $('.dropdown-item.dropdown-toggle').on('click', function() {
+            $(this).toggleClass('changed');
+        });
+    </script>
+  @endpush

@@ -32,5 +32,32 @@
 }
 </style>
 
+<style>
+    .nav-link.dropdown-toggle.changed:after {
+        content: "";
+        display: inline-block;
+        vertical-align: .306em;
+        width: .36em;
+        height: .36em;
+        border-bottom: 1px var(--tblr-border-style);
+        border-left: 1px var(--tblr-border-style);
+        margin-right: .1em;
+        margin-left: .4em;
+        transform: rotate(-45deg);
+    }
+    .dropdown-item.dropdown-toggle.changed:after {
+        content: "";
+        display: inline-block;
+        vertical-align: .306em;
+        width: .36em;
+        height: .36em;
+        border-bottom: 1px var(--tblr-border-style);
+        border-left: 1px var(--tblr-border-style);
+        margin-right: .1em;
+        margin-left: .4em;
+        transform: rotate(-45deg);
+    }
+</style>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
