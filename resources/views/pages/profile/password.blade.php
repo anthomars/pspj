@@ -1,4 +1,4 @@
-@extends('backend.user.layouts.template')
+@extends('layouts.template')
 @section('title', 'User Account')
 @section('content')
 
@@ -79,7 +79,7 @@
                                         </div>
                                     @enderror
                                 </div>
-                                <a href="{{ route('forgot.password.auth') }}" class="btn btn-sm btn-link" >Forgot your password?</a>
+                                {{-- <a href="{{ route('forgot.password.auth') }}" class="btn btn-sm btn-link" >Forgot your password?</a> --}}
 
                                 <div class="form-label mt-3">New password</div>
                                 <div class="input-group input-group-flat">

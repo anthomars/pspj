@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\BlokPemakamanController;
+use App\Http\Controllers\JenazahController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,4 +89,8 @@ Route::middleware('auth.user')->group(function () {
         Route::put('blok/{blok}', [BlokPemakamanController::class, 'update']);
         Route::delete('blok/{blok}', [BlokPemakamanController::class, 'destroy']);
     });
+
+    // Jenazah
+    Route::get('jenazah/data', [JenazahController::class, 'data'])->name('jenazah.dataTable');
+    Route::resource('jenazah', JenazahController::class);
 });
