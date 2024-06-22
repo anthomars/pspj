@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('keluarga')->nullable();
             $table->string('author_create')->nullable();
             $table->string('author_update')->nullable();
-            $table->foreignId('iuran_id');
             $table->foreignId('user_id');
         });
     }

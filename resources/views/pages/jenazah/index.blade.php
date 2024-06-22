@@ -7,14 +7,13 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <!-- Page pre-title -->
-                    <div class="page-pretitle">User Account</div>
+                    <div class="page-pretitle">Jenazah</div>
                     <h2 class="page-title">List</h2>
                 </div>
                 <!-- Page title actions -->
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
-                        <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal"
-                            data-bs-target="#modal-add">
+                        <a href="{{ url('/jenazah/create') }}" class="btn btn-primary d-none d-sm-inline-block">
                             <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-plus" width="24"
                                 height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -98,7 +97,9 @@
               { data: 'tempat_wafat', name: 'tempat_wafat' },
               { data: 'nik', name: 'nik' },
               { data: 'alamat', name: 'alamat' },
-              { data: 'user.nama_lengkap', name: 'user.nama_lengkap' },
+              { data: 'keluarga', name: 'keluarga' },
+              { data: 'author_create', name: 'author_create' },
+              { data: 'author_update', name: 'author_update' },
               { data: 'action', name: 'action', orderable: false, searchable: false, width: '20px'},
             ],
             "search": {
@@ -115,159 +116,6 @@
             }
           });
         });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            Dropzone.autoDiscover = false;
-            new Dropzone("#fileUpload", {
-                autoProcessQueue: false,
-                url: "{{ url('user') }}",
-                addRemoveLinks: true,
-                uploadMultiple: true,
-                acceptedFiles: 'image/*',
-                maxFilesize: 2, // MB
-                init: function() {
-                    this.on('addedfile', function(file) {
-                        if (this.files.length > 1) {
-                            this.removeFile(this.files[0]);
-
-                            const Toast = Swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                                width: 'auto',
-                                didOpen: (toast) => {
-                                    toast.addEventListener('mouseenter', Swal
-                                        .stopTimer)
-                                    toast.addEventListener('mouseleave', Swal
-                                        .resumeTimer)
-                                }
-                            })
-
-                            Toast.fire({
-                                icon: 'error',
-                                title: 'Photo tidak bisa lebih dari satu!'
-                            })
-                        }
-                    });
-
-                    this.on("removedfile", function(file) {
-                        let fileReader = new FileReader();
-
-                        fileReader.readAsDataURL(file);
-                        fileReader.onloadend = function() {
-
-                            let content = fileReader.result;
-                            $("#image_input_hidden").find(`input[value='${content}']`)
-                                .remove();
-
-                        }
-                    });
-
-                },
-                accept: function(file) {
-                    let fileReader = new FileReader();
-
-                    fileReader.readAsDataURL(file);
-                    fileReader.onloadend = function() {
-
-                        let content = fileReader.result;
-
-                        $("#image_input_hidden").append(`
-                        <input type="text" hidden name="image" class="form-control" placeholder="Logo" value="${content}">
-                    `);
-
-                        file.previewElement.classList.add("dz-success");
-                        $('.dz-progress').hide();
-
-                    }
-                },
-                error: function(file, message) {
-                    if (file.previewElement) {
-                        file.previewElement.classList.add("dz-error");
-                        if (typeof message !== "string" && message.error) {
-                            message = message.error;
-                        }
-                        for (let node of file.previewElement.querySelectorAll(
-                                "[data-dz-errormessage]"
-                            )) {
-                            node.textContent = message;
-                        }
-                    }
-                    $('.dz-progress').hide();
-                }
-            });
-
-            new Dropzone("#fileUploadEdit", {
-                autoProcessQueue: false,
-                url: "{{ url('user-account') }}",
-                addRemoveLinks: true,
-                uploadMultiple: false,
-                acceptedFiles: 'image/*',
-                maxFilesize: 2, // MB
-                init: function() {
-                    this.on('addedfile', function(file) {
-                        if (this.files.length > 1) {
-                            this.removeFile(this.files[0]);
-
-                            const Toast = Swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                                width: 'auto',
-                                didOpen: (toast) => {
-                                    toast.addEventListener('mouseenter', Swal
-                                        .stopTimer)
-                                    toast.addEventListener('mouseleave', Swal
-                                        .resumeTimer)
-                                }
-                            })
-
-                            Toast.fire({
-                                icon: 'error',
-                                title: 'File tidak boleh lebih dari satu!'
-                            })
-                        }
-                    });
-
-                    this.on("removedfile", function() {
-                        $('#photo_show_edit').val('');
-                    });
-
-                },
-                accept: function(file) {
-                    let fileReader = new FileReader();
-
-                    fileReader.readAsDataURL(file);
-                    fileReader.onloadend = function() {
-
-                        let content = fileReader.result;
-                        $('#photo_show_edit').val(content);
-                        file.previewElement.classList.add("dz-success");
-                        $('.dz-progress').hide();
-
-                    }
-                },
-                error: function(file, message) {
-                    if (file.previewElement) {
-                        file.previewElement.classList.add("dz-error");
-                        if (typeof message !== "string" && message.error) {
-                            message = message.error;
-                        }
-                        for (let node of file.previewElement.querySelectorAll(
-                                "[data-dz-errormessage]"
-                            )) {
-                            node.textContent = message;
-                        }
-                    }
-                    $('.dz-progress').hide();
-                }
-            });
-        })
     </script>
 
     <script>

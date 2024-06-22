@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Jenazah;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class JenazahController extends Controller
@@ -61,5 +63,49 @@ class JenazahController extends Controller
     public function index()
     {
         return view('pages.jenazah.index');
+    }
+
+    public function create()
+    {
+        return view('pages.jenazah.create');
+    }
+
+    public function store(Request $request)
+    {
+        $rules = [
+            'nama_jenazah'  => 'required',
+            'tgl_lahir'  => 'required',
+            'tgl_wafat'  => 'required',
+            'tempat_lahir'  => 'required',
+            'tempat_wafat'  => 'required',
+            'nik'  => 'required',
+            'alamat'  => 'required',
+            'keluarga'  => 'required',
+        ];
+        $message = [
+            'nama_jenazah.required' => 'Nama jenazah harus di isi.',
+            'tgl_lahir.required' => 'Tanggal lahir harus di isi.',
+            'tgl_wafat.required' => 'Tanggal wafat harus di isi.',
+            'tempat_lahir.required' => 'Tanggal lahir harus di isi.',
+            'tanggal_wafat.required' => 'Tanggal wafat harus di isi.',
+            'nik.required' => 'NIK harus di isi.',
+            'alamat.required' => 'Alamat harus di isi.',
+            'keluarga.required' => 'Keluarga harus di isi.',
+        ];
+        $validatedData = $request->validate($rules, $message);
+
+        $validatedData['author_create'] = Auth::user()->username;
+        $validatedData['author_update'] = Auth::user()->username;
+        $validatedData['user_id'] = Auth::user()->id;
+
+        $jenazah = Jenazah::create($validatedData);
+
+        if ($jenazah) {
+            Alert::toast('Data "' . $jenazah->nama_jenazah . '" berhasil ditambah!', 'success');
+            return redirect('/jenazah');
+        } else {
+            Alert::toast('Data "' . $jenazah->nama_jenazah . '" gagal ditambah!', 'error');
+            return redirect('/jenazah/create');
+        }
     }
 }
