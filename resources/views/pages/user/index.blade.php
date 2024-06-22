@@ -122,6 +122,20 @@
                             <div id="message_nik" class="invalid-feedback"></div>
                         </div>
                     </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">RT</label>
+                            <select type="text" class="form-select" placeholder="--Please Select--" id="rt_id" name="rt_id" value="">
+                            </select>
+                            <div class="invalid-feedback" id="message_rt_id"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">RW</label>
+                        <select type="text" class="form-select" placeholder="--Please Select--" id="rw_id" name="rw_id" value="">
+                        </select>
+                        <div class="invalid-feedback" id="message_rw_id"></div>
+                        </div>
+                    </div>
                     <div class="mb-3">
                         <label class="form-label">Role</label>
                         <select type="text" class="form-select" placeholder="--Please Select--" id="role_id" name="role_id" value="">
@@ -216,6 +230,18 @@
                             <input type="text" id="email_show_edit" name="email" class="form-control"
                                 placeholder="Name" value="" disabled />
                             <div class="invalid-feedback" id="message_email_show_edit" style="display: none"></div>
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label">RT</label>
+                            <select type="text" class="form-select" placeholder="--Please Select--" id="rt_id_show_edit" name="rt_id_show_edit" value="" disabled>
+                            </select>
+                            <div class="invalid-feedback" id="message_rt_id_show_edit"></div>
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label">RW</label>
+                            <select type="text" class="form-select" placeholder="--Please Select--" id="rw_id_show_edit" name="rw_id_show_edit" value="" disabled>
+                            </select>
+                            <div class="invalid-feedback" id="message_rw_id_show_edit"></div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Status</label>
@@ -402,6 +428,43 @@
             selectionCssClass: 'select2--small',
             dropdownCssClass: 'select2--small',
         });
+
+        $('#rt_id').select2({
+            theme: "bootstrap-5",
+            dropdownParent: $('#rt_id').parent(),
+            placeholder: $(this).data('placeholder'),
+            closeOnSelect: false,
+            tags: true,
+            selectionCssClass: 'select2--small',
+            dropdownCssClass: 'select2--small',
+        });
+        $('#rt_id_show_edit').select2({
+            theme: "bootstrap-5",
+            dropdownParent: $('#rt_id_show_edit').parent(),
+            placeholder: $(this).data('placeholder'),
+            closeOnSelect: false,
+            tags: true,
+            selectionCssClass: 'select2--small',
+            dropdownCssClass: 'select2--small',
+        });
+        $('#rw_id').select2({
+            theme: "bootstrap-5",
+            dropdownParent: $('#rw_id').parent(),
+            placeholder: $(this).data('placeholder'),
+            closeOnSelect: false,
+            tags: true,
+            selectionCssClass: 'select2--small',
+            dropdownCssClass: 'select2--small',
+        });
+        $('#rw_id_show_edit').select2({
+            theme: "bootstrap-5",
+            dropdownParent: $('#rw_id_show_edit').parent(),
+            placeholder: $(this).data('placeholder'),
+            closeOnSelect: false,
+            tags: true,
+            selectionCssClass: 'select2--small',
+            dropdownCssClass: 'select2--small',
+        });
     </script>
     <script>
         $(function() {
@@ -482,6 +545,42 @@
         });
     </script>
     <script>
+        function getRt() {
+            var role;
+            $.ajax({
+                url: "{{ route('rt.getRt') }}",
+                dataType: 'json',
+                type: "get",
+                async: false,
+                data: {
+                    '_token': '{{ csrf_token() }}',
+                },
+                success: function(data) {
+                    role = data.data;
+                },
+                error: function(xhr) {},
+            });
+
+            return role;
+        }
+        function getRw() {
+            var role;
+            $.ajax({
+                url: "{{ route('rw.getRw') }}",
+                dataType: 'json',
+                type: "get",
+                async: false,
+                data: {
+                    '_token': '{{ csrf_token() }}',
+                },
+                success: function(data) {
+                    role = data.data;
+                },
+                error: function(xhr) {},
+            });
+
+            return role;
+        }
         function getRole() {
             var role;
             $.ajax({
@@ -510,6 +609,8 @@
             $('#phone').removeClass('is-invalid');
             $('#nik').removeClass('is-invalid');
             $('#password').removeClass('is-invalid');
+            $('#rt_id').removeClass('is-invalid');
+            $('#rw_id').removeClass('is-invalid');
             $('#role_id').removeClass('is-invalid');
             $('#message_photo').css('display', 'none');
             $('#message_username').css('display', 'none');
@@ -519,19 +620,36 @@
             $('#message_nik').css('display', 'none');
             $('#message_role_id').css('display', 'none');
 
+            $('#rt_id').empty();
+            $('#rw_id').empty();
             $('#role_id').empty();
         });
 
         $('#modal-add').on('shown.bs.modal', function() {
             let dataRole = `<option value="" selected disabled>-- Please Select --</option>`;
+            let dataRt = `<option value="" selected disabled>-- Please Select --</option>`;
+            let dataRw = `<option value="" selected disabled>-- Please Select --</option>`;
 
+            // get Role
             getRole().forEach(getDataRole);
-
             function getDataRole(item, index) {
                 dataRole += `<option value="${item.id_role}">${item.nama_role}</option>`;
             }
-
             $('#role_id').append(dataRole);
+
+            // get Rt
+            getRt().forEach(getDataRt);
+            function getDataRt(item, index) {
+                dataRt += `<option value="${item.id_rt}">${item.no_rt}</option>`;
+            }
+            $('#rt_id').append(dataRt);
+
+            // get Rw
+            getRw().forEach(getDataRw);
+            function getDataRw(item, index) {
+                dataRw += `<option value="${item.id_rw}">${item.no_rw}</option>`;
+            }
+            $('#rw_id').append(dataRw);
         });
 
         $(function() {
@@ -545,6 +663,8 @@
                 let phone = $('#phone').val();
                 let password = $('#password').val();
                 let nik = $('#nik').val();
+                let rt_id = $('#rt_id option:selected').val();
+                let rw_id = $('#rw_id option:selected').val();
                 let role_id = $('#role_id option:selected').val();
                 let is_active = $('#is_active_show_edit').prop('checked') == true ? 1 : 0;
 
@@ -561,6 +681,8 @@
                         'no_hp': phone,
                         'password': password,
                         'nik': nik,
+                        'rt_id': rt_id,
+                        'rw_id': rw_id,
                         'role_id': role_id,
                         'is_active': is_active
                     },
@@ -632,6 +754,16 @@
                             $('#password').addClass('is-invalid');
                             $('#message_password').css('display', 'inline-block');
                             $('#message_password').text(xhr.responseJSON.errors.password[0]);
+                        }
+                        if (xhr.responseJSON.errors.rt_id !== undefined) {
+                            $('#rt_id').addClass('is-invalid');
+                            $('#message_rt_id').css('display', 'inline-block');
+                            $('#message_rt_id').text(xhr.responseJSON.errors.rt_id[0]);
+                        }
+                        if (xhr.responseJSON.errors.rw_id !== undefined) {
+                            $('#rw_id').addClass('is-invalid');
+                            $('#message_rw_id').css('display', 'inline-block');
+                            $('#message_rw_id').text(xhr.responseJSON.errors.rw_id[0]);
                         }
                         if (xhr.responseJSON.errors.role_id !== undefined) {
                             $('#role_id').addClass('is-invalid');
@@ -807,7 +939,7 @@
 
 <script>
     $('#modal-detail').on('hidden.bs.modal', function() {
-        $('#title').text('Admin Detail');
+        $('#title').text('User Detail');
 
         $('#display_photo_show_edit').hide();
         $('#photo_show_detail').show();
@@ -826,7 +958,11 @@
         $('#message_email_show_edit').css('display', 'none');
         // $('#role_show_edit').removeClass('is-invalid');
         // $('#message_role_show_edit').css('display', 'none');
+        $('#rt_id_show_edit').removeClass('is-invalid');
+        $('#rw_id_show_edit').removeClass('is-invalid');
         $('#role_id_show_edit').removeClass('is-invalid');
+        $('#message_rt_id_show_edit').css('display', 'none');
+        $('#message_rw_id_show_edit').css('display', 'none');
         $('#message_role_id_show_edit').css('display', 'none');
         // $('#area_location_id_show_edit').removeClass('is-invalid');
         // $('#message_area_location_id_show_edit').css('display', 'none');
@@ -851,6 +987,8 @@
         $('#display_photo_show_edit').show();
         $('#name_show_edit').prop('disabled', false);
         // $('#role_show_edit').prop('disabled', false);
+        $('#rt_id_show_edit').prop('disabled', false);
+        $('#rw_id_show_edit').prop('disabled', false);
         $('#role_id_show_edit').prop('disabled', false);
         // $('#area_location_id_show_edit').prop('disabled', false);
         $('#email_show_edit').prop('disabled', false);
@@ -894,13 +1032,27 @@
 
 
         let dataRole = `<option value="" selected>-- Please Select --</option>`;
+        let dataRt = `<option value="" selected>-- Please Select --</option>`;
+        let dataRw = `<option value="" selected>-- Please Select --</option>`;
 
+        getRt().forEach(getDataRt);
+        function getDataRt(item, index) {
+            dataRt += `<option value="${item.id_rt}">${item.no_rt}</option>`;
+        }
+
+        getRw().forEach(getDataRw);
+
+        function getDataRw(item, index) {
+            dataRw += `<option value="${item.id_rw}">${item.no_rw}</option>`;
+        }
         getRole().forEach(getDataRole);
 
         function getDataRole(item, index) {
             dataRole += `<option value="${item.id_role}">${item.nama_role}</option>`;
         }
 
+        $('#rt_id_show_edit').append(dataRt);
+        $('#rw_id_show_edit').append(dataRw);
         $('#role_id_show_edit').append(dataRole);
 
         $('#title').text('Admin Detail');
@@ -937,6 +1089,8 @@
                 }
                 $('#name_show_edit').val(datas.data.nama_lengkap);
                 // $('#role_show_edit').val(datas.data.roles[0].id).trigger('change');
+                $('#rt_id_show_edit').val(datas.data.rt_id).trigger('change');
+                $('#rw_id_show_edit').val(datas.data.rw_id).trigger('change');
                 $('#role_id_show_edit').val(datas.data.role_id).trigger('change');
                 $('#phone_show_edit').val(datas.data.no_hp);
                 $('#email_show_edit').val(datas.data.email);
@@ -989,6 +1143,8 @@
         let name = $('#name_show_edit').val();
         let email = $('#email_show_edit').val();
         // let role = $('#role_show_edit option:selected').val();
+        let rt_id = $('#rt_id_show_edit option:selected').val();
+        let rw_id = $('#rw_id_show_edit option:selected').val();
         let role_id = $('#role_id_show_edit option:selected').val();
         // let area_location_id_result = area_location_id.map((value) => value);
         let phone = $('#phone_show_edit').val();
@@ -1003,6 +1159,8 @@
                 'nama_lengkap': name,
                 'email': email,
                 // 'role': role,
+                'rt_id': rt_id,
+                'rw_id': rw_id,
                 'role_id': role_id,
                 // 'area_location_id': area_location_id,
                 'no_hp': phone,

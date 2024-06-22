@@ -197,4 +197,14 @@ class RtController extends Controller
         }
     }
 
+    public function getRt()
+    {
+        $rt = Rt::all();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $rt,
+        ]);
+    }
+
 }

@@ -63,7 +63,7 @@ Route::middleware('auth.user')->group(function () {
 
     Route::prefix('master-data')->group(function() {
         // RW
-        Route::get('rw/getRole', [RwController::class, 'getRw'])->name('rw.getRw');
+        Route::get('rw/getRw', [RwController::class, 'getRw'])->name('rw.getRw');
         Route::get('rw/data', [RwController::class, 'data'])->name('rw.dataTable');
         Route::get('rw', [RwController::class, 'index']);
         Route::post('rw', [RwController::class, 'store']);
@@ -72,6 +72,7 @@ Route::middleware('auth.user')->group(function () {
         Route::delete('rw/{rw}', [RwController::class, 'destroy']);
 
         // RT
+        Route::get('rt/getRw', [RtController::class, 'getRt'])->name('rt.getRt');
         Route::get('rt/data', [RtController::class, 'data'])->name('rt.dataTable');
         Route::get('rt', [RtController::class, 'index']);
         Route::post('rt', [RtController::class, 'store']);

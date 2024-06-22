@@ -130,7 +130,9 @@ class UserController extends Controller
             'email'             => 'required|unique:users,email|email',
             'no_hp'             => 'required|unique:users,no_hp|regex:/^([0-9\s\-\+\(\)]*)$/|min:8',
             'password'          => 'required',
-            'nik'          => 'required',
+            'nik'               => 'required',
+            'rt_id'             => 'required',
+            'rw_id'             => 'required',
             'role_id'           => 'required',
         ];
         $message = [
@@ -147,6 +149,8 @@ class UserController extends Controller
             'password.required' => 'Password harus di isi.',
             'nik.required' => 'NIK harus di isi.',
             // 'role.required' => 'Role harus di isi.',
+            'rt_id.required' => 'RT harus di isi.',
+            'rw_id.required' => 'RW harus di isi.',
             'role_id.required' => 'Role harus di isi.',
         ];
         $validatedData = $request->validate($rules, $message);
@@ -217,6 +221,14 @@ class UserController extends Controller
             $message['no_hp.unique'] = 'Telepon sudah digunakan.';
         }
 
+        if($dataOld->rt_id != $request->rt_id) {
+            $rules['rt_id'] = 'required';
+            $message['rt_id.required'] = 'RT harus di isi.';
+        }
+        if($dataOld->rw_id != $request->rw_id) {
+            $rules['rw_id'] = 'required';
+            $message['rw_id.required'] = 'RW harus di isi.';
+        }
         if($dataOld->role_id != $request->role_id) {
             $rules['role_id'] = 'required';
             $message['role_id.required'] = 'Role harus di isi.';
