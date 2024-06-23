@@ -74,28 +74,41 @@
                             </div>
 
                             <div class="row mt-5">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-label">NIK</div>
                                     <input type="text" name="nik"
                                         class="form-control @error('nik') is-invalid @enderror" value="{{ $user->nik }}"
                                         disabled>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <div class="form-label">RT</div>
+                                    <input type="text" name="rt_id"
+                                        class="form-control @error('rt_id') is-invalid @enderror" value="{{ $user->rt->no_rt }}"
+                                        disabled>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-label">RW</div>
+                                    <input type="text" name="rw_id"
+                                        class="form-control @error('rw_id') is-invalid @enderror" value="{{ $user->rw->no_rw }}"
+                                        disabled>
+                                </div>
+
+                            </div>
+
+                            <div class="row mt-5">
+                                <div class="col-md-4">
                                     <div class="form-label">Nama</div>
                                     <input type="text" name="nama_lengkap"
                                         class="form-control @error('nama_lengkap') is-invalid @enderror"
                                         value="{{ $user->nama_lengkap }}" disabled>
                                 </div>
-                            </div>
-
-                            <div class="row mt-5">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-label">Username</div>
                                     <input type="text" name="username"
                                         class="form-control @error('username') is-invalid @enderror"
                                         value="{{ $user->username }}" disabled>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-label">Phone</div>
                                     <input type="text" name="no_hp"
                                         class="form-control @error('no_hp') is-invalid @enderror"

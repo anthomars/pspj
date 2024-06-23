@@ -14,7 +14,6 @@ class UserProfileController extends Controller
    public function index()
    {
         $user = User::where('id', auth()->guard('web')->user()->id)->first();
-
         return view('pages.profile.index', compact('user'));
    }
 
@@ -98,6 +97,7 @@ class UserProfileController extends Controller
 
    public function updateAvatar(Request $request)
    {
+        // dd($request->all());
         $dataOld = User::where('id', auth()->guard('web')->user()->id)->first();
         $user   = User::findOrFail($dataOld->id);
 

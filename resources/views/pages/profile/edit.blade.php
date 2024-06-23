@@ -42,7 +42,7 @@
                                 </div>
                             </div>
                             <div class="row align-items-center mt-5">
-                                @if ($user->photo)
+                                @if ($user->image)
                                     <div class="col-auto">
                                         <span class="avatar avatar-xl" style="background-image: url('{{ asset('storage/' . $user->image) }}')"></span>
                                     </div>
@@ -53,10 +53,10 @@
                                 @endif
                                 <div class="col-auto">
                                     <button class="btn btn-ghost-primary" data-bs-toggle="modal" data-bs-target="#modal-change-avatar">
-                                        {{ $user->photo ? 'Change Photo' : 'Add Photo' }}
+                                        {{ $user->image ? 'Change Photo' : 'Add Photo' }}
                                     </button>
                                 </div>
-                                @if($user->photo)
+                                @if($user->image)
                                     <div class="col-auto">
                                         <button data-id="{{ $user->id }}" onclick="deletePhoto('{{ $user->id }}')" class="btn btn-ghost-danger">
                                             Delete Photo
@@ -71,7 +71,7 @@
                             <div class="card-body mb-4">
 
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-label">NIK</div>
                                         <input type="text" name="nik" id="nik" class="form-control @error('nik') is-invalid @enderror" value="{{ $user->nik }}" disabled>
                                         @error('nik')
@@ -80,7 +80,22 @@
                                             </div>
                                         @enderror
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <div class="form-label">RT</div>
+                                        <input type="text" name="rt_id"
+                                            class="form-control @error('rt_id') is-invalid @enderror" value="{{ $user->rt->no_rt }}"
+                                            disabled>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-label">RW</div>
+                                        <input type="text" name="rw_id"
+                                            class="form-control @error('rw_id') is-invalid @enderror" value="{{ $user->rw->no_rw }}"
+                                            disabled>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-5">
+                                    <div class="col-md-4">
                                         <div class="form-label">Nama</div>
                                         <input type="text" name="nama_lengkap" id="nama_lengkap" class="form-control @error('nama_lengkap') is-invalid @enderror" value="{{ $user->nama_lengkap }}">
                                         @error('nama_lengkap')
@@ -89,10 +104,7 @@
                                             </div>
                                         @enderror
                                     </div>
-                                </div>
-
-                                <div class="row mt-5">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-label">Username</div>
                                         <input type="text" name="username" id="username" class="form-control @error('username') is-invalid @enderror" value="{{ $user->username }}">
                                         @error('username')
@@ -101,7 +113,7 @@
                                             </div>
                                         @enderror
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-label">Phone</div>
                                         <input type="tel" name="no_hp" id="no_hp" class="form-control number @error('no_hp') is-invalid @enderror" value="{{ $user->no_hp }}">
                                         @error('no_hp')
@@ -151,7 +163,7 @@
                     @csrf
                     <div class="modal-body">
                         <div id="display_photo_show_edit">
-                            <input type="text" hidden id="photo_show_edit" name="photo" class="form-control" placeholder="Photo">
+                            <input type="text" hidden id="photo_show_edit" name="image" class="form-control" placeholder="Photo">
                             <div class="dropzone dropzone-file-area" id="fileUploadEdit">
                                 <div class="dz-default dz-message">
                                     <h3 class="sbold">Drop files here to upload</h3>
