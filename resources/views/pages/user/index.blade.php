@@ -11,7 +11,7 @@
                     <h2 class="page-title">List</h2>
                 </div>
                 <!-- Page title actions -->
-                <div class="col-auto ms-auto d-print-none">
+                <div class="col-auto ms-auto d-flex gap-2 d-print-none">
                     <div class="btn-list">
                         <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal"
                             data-bs-target="#modal-add">
@@ -27,6 +27,12 @@
                         </a>
                     </div>
                 </div>
+            </div>
+
+            <div class="mt-3 w-25">
+                <div class="form-label">Filter By Role</div>
+                <select class="form-select" name="filter_role" id="filter_role">
+                </select>
             </div>
         </div>
     </div>
@@ -466,6 +472,50 @@
             dropdownCssClass: 'select2--small',
         });
     </script>
+
+    <script>
+        var roleFilter = 0;
+        $(document).ready(function () {
+            roleFilterAppend();
+        });
+
+        function getFilterRole() {
+            let role;
+            $.ajax({
+                url: "{{ route('role.getRole') }}",
+                dataType: 'json',
+                type: "get",
+                async: false,
+                data: {
+                    '_token': '{{ csrf_token() }}',
+                },
+                success: function(data) {
+                    role = data.data;
+                },
+                error: function(xhr) {},
+            });
+
+            return role;
+        }
+
+        function roleFilterAppend() {
+            let html = `<option value="0">All</option>`;
+            getFilterRole().forEach(element => {
+                html += `<option value="${element.id_role}">${element.nama_role}</option>`
+            });
+
+            $('#filter_role').append(html);
+            // $('#filter_role_export').append(html);
+        }
+
+        $('#filter_role').change(function (e) {
+            e.preventDefault();
+            roleFilter = $(this).val();
+
+            $('#data-datatable').DataTable().ajax.reload();
+        });
+
+    </script>
     <script>
         $(function() {
             $.fn.dataTable.moment('DD/MM/YYYY');
@@ -474,7 +524,14 @@
                 processing: true,
                 serverSide: true,
                 'bAutoWidth':false,
-                ajax: '{!! route('userAccount.dataTable') !!}', // memanggil route yang menampilkan data json
+                ajax: {
+                        'url':    '{!! route('userAccount.dataTable') !!}', // memanggil route yang menampilkan data json,
+                        'contentType': 'application/json',
+                        // 'type': 'POST',
+                        'data': function (d) {
+                            d.roleFilter = roleFilter;
+                        }
+                    },
                 columns: [ // mengambil & menampilkan kolom sesuai tabel database
                     {
                         "data": "id",

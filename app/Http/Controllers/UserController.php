@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
@@ -13,10 +14,13 @@ use Yajra\DataTables\Facades\DataTables;
 class UserController extends Controller
 {
 
-    public function data() {
-        // $auth = Auth::guard('web')->user();
+    public function data(Request $request) {
 
-        $data = User::orderBy('id','ASC');
+        if ($request->roleFilter == 0) {
+            $data = User::orderBy('id','ASC');
+        } else {
+            $data = User::where('role_id', $request->roleFilter);
+        }
 
         return DataTables::of($data)->addIndexColumn()
             ->addColumn('user', function($row){
@@ -92,7 +96,17 @@ class UserController extends Controller
                     ';
                 return $btn;
             })
-            ->rawColumns(['action'])
+            ->filterColumn('user', function ($query, $keyword) {
+                $query->where('nama_lengkap', 'like', "%{$keyword}%");
+                $query->where('email', 'like', "%{$keyword}%");
+            })
+            ->filterColumn('role', function ($query, $keyword) {
+                $query->whereHas('role', function ($query) use ($keyword) {
+                    $query->where('nama_role', 'like', "%{$keyword}%");
+                });
+            })
+            // ->rawColumns(['action'])
+            ->smart(false)
             ->escapeColumns([])
             ->toJson();
     }
