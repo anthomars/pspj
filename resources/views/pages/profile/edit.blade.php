@@ -72,9 +72,9 @@
 
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <div class="form-label">User Id</div>
-                                        <input type="text" name="id" id="uuid" class="form-control @error('uuid') is-invalid @enderror" value="{{ $user->id }}" disabled>
-                                        @error('id')
+                                        <div class="form-label">NIK</div>
+                                        <input type="text" name="nik" id="nik" class="form-control @error('nik') is-invalid @enderror" value="{{ $user->nik }}" disabled>
+                                        @error('nik')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>

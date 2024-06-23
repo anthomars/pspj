@@ -1,5 +1,5 @@
 @extends('layouts.template')
-@section('title', 'User Account')
+@section('title', 'List Jenazah')
 @section('content')
     <!-- Page header -->
     <div class="page-header d-print-none">
@@ -133,7 +133,7 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    let url = "{!! url('/user-account/"+id+"') !!}";
+                    let url = "{!! url('/jenazah/"+id+"') !!}";
 
                     $.ajax({
                         type: "DELETE",

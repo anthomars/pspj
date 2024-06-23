@@ -75,9 +75,9 @@
 
                             <div class="row mt-5">
                                 <div class="col-md-6">
-                                    <div class="form-label">User Id</div>
-                                    <input type="text" name="id"
-                                        class="form-control @error('uuid') is-invalid @enderror" value="{{ $user->id }}"
+                                    <div class="form-label">NIK</div>
+                                    <input type="text" name="nik"
+                                        class="form-control @error('nik') is-invalid @enderror" value="{{ $user->nik }}"
                                         disabled>
                                 </div>
                                 <div class="col-md-6">

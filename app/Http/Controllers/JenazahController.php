@@ -22,16 +22,23 @@ class JenazahController extends Controller
                     <div class="dropdown-menu">
                 ';
 
+                $url =('jenazah/'. $row->id_jenazah . '/edit');
+                // $btn .= '
+                // <button data-id="'. $row->id_jenazah .'"  class="dropdown-item" onclick="detailData('. $row->id_jenazah .')" data-toggle="tooltip" title="Detail">
+                //     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-info-square-rounded me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                //         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                //         <path d="M12 9h.01"></path>
+                //         <path d="M11 12h1v4h1"></path>
+                //         <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z"></path>
+                //     </svg>
+                //     Detail
+                // </button>
+                // ';
                 $btn .= '
-                <button data-id="'. $row->id_jenazah .'"  class="dropdown-item" onclick="detailData('. $row->id_jenazah .')" data-toggle="tooltip" title="Detail">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-info-square-rounded me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                        <path d="M12 9h.01"></path>
-                        <path d="M11 12h1v4h1"></path>
-                        <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z"></path>
-                    </svg>
-                    Detail
-                </button>
+                    <a href="'. $url .'" class="dropdown-item">
+                        <svg  xmlns="http://www.w3.org/2000/svg" class="me-1"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-edit"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
+                        Edit
+                    </a>
                 ';
 
                 $btn .= '
@@ -108,4 +115,90 @@ class JenazahController extends Controller
             return redirect('/jenazah/create');
         }
     }
+
+    public function edit(Request $request)
+    {
+        // dd($request->segment(2));
+        $jenazah = Jenazah::where('id_jenazah', $request->segment(2))->get();
+        // dd($jenazah);
+        return view('pages.jenazah.edit', compact('jenazah'));
+    }
+
+    public function update(Request $request)
+    {
+        // dd($request->all());
+        $jenazah = Jenazah::where('id_jenazah', $request->segment(2))->get();
+        // dd($jenazah);
+        $rules = [];
+        $message = [];
+
+        if ($jenazah[0]->nama_jenazah != $request->nama_jenazah) {
+            $rules['nama_jenazah'] = 'required';
+            $message['nama_jenazah.required'] = 'Nama Jenazah harus di isi.';
+        }
+        if ($jenazah[0]->tgl_lahir != $request->tgl_lahir) {
+            $rules['tgl_lahir'] = 'required';
+            $message['tgl_lahir.required'] = 'Harus di isi.';
+        }
+        if ($jenazah[0]->tgl_wafat != $request->tgl_wafat) {
+            $rules['tgl_wafat'] = 'required';
+            $message['tgl_wafat.required'] = 'Harus di isi.';
+        }
+        if ($jenazah[0]->tempat_lahir != $request->tempat_lahir) {
+            $rules['tempat_lahir'] = 'required';
+            $message['tempat_lahir.required'] = 'Harus di isi.';
+        }
+        if ($jenazah[0]->tempat_wafat != $request->tempat_wafat) {
+            $rules['tempat_wafat'] = 'required';
+            $message['tempat_wafat.required'] = 'Harus di isi.';
+        }
+        if ($jenazah[0]->nik != $request->nik) {
+            $rules['nik'] = 'required';
+            $message['nik.required'] = 'Harus di isi.';
+        }
+        if ($jenazah[0]->alamat != $request->alamat) {
+            $rules['alamat'] = 'required';
+            $message['alamat.required'] = 'Harus di isi.';
+        }
+        if ($jenazah[0]->keluarga != $request->keluarga) {
+            $rules['keluarga'] = 'required';
+            $message['keluarga.required'] = 'Harus di isi.';
+        }
+
+        $validatedData = $request->validate($rules, $message);
+
+        $validatedData['author_update'] = Auth::user()->username;
+        $update = Jenazah::where('id_jenazah', $jenazah[0]->id_jenazah)->update($validatedData);
+        if ($update) {
+            Alert::toast('Data berhasil diperbarui!', 'success');
+            return redirect('/jenazah');
+        } else {
+            Alert::toast('Tidak ada data yang diubah!', 'info');
+
+            return redirect('/jenazah');
+        }
+    }
+
+    public function destroy(Request $request, string $id)
+    {
+
+        $oldData = Jenazah::where('id_jenazah', $id)->get();
+        $delete = Jenazah::where('id_jenazah', $id)->delete();
+
+
+        if($delete) {
+            return response()->json([
+                'status' => 'success',
+                'title' => 'Sukses',
+                'message'=>'Data "'.$oldData[0]->nama_jenazah.'" berhasil dihapus!'
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'title' => 'Gagal!',
+                'message'=>'Data "'.$oldData[0]->nama_jenazah.'" gagal dihapus!'
+            ], 400);
+        }
+    }
+
 }
