@@ -16,11 +16,11 @@ return new class extends Migration
             $table->string('nama_iuran');
             $table->integer('nominal_iuran');
             $table->enum('metode_bayar', ['1', '2']);
-            $table->enum('status_bayr', ['belum lunas', 'lunas',]);
+            $table->enum('status_bayar', ['belum lunas', 'lunas',]);
             $table->string('author_create')->nullable();
             $table->string('author_update')->nullable();
             $table->date('date_created');
-            $table->foreignId('biaya_id');
+            // $table->foreignId('biaya_id');
             $table->foreignId('user_id');
             $table->foreignId('jenazah_id');
         });

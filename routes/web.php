@@ -93,4 +93,10 @@ Route::middleware('auth.user')->group(function () {
     // Jenazah
     Route::get('jenazah/data', [JenazahController::class, 'data'])->name('jenazah.dataTable');
     Route::resource('jenazah', JenazahController::class);
+
+    //Iuran
+    Route::controller(\App\Http\Controllers\IuranController::class)->group(function(){
+        Route::get('iuran', 'index')->name('iuran.index');
+        Route::get('iuran/data', 'data')->name('iuran.dataTable');
+    });
 });

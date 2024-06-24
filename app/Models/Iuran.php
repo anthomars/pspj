@@ -20,7 +20,7 @@ class Iuran extends Model
         'author_create',
         'author_update',
         'date_created',
-        'biaya_id',
+        // 'biaya_id',
         'user_id',
         'jenazah_id',
     ];
