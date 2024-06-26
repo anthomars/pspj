@@ -175,7 +175,16 @@
           }, width: '50px'  },
           { data: 'nama_jenazah', name: 'nama_jenazah' },
           { data: 'nama_iuran', name: 'nama_iuran' },
-          { data: 'nominal_iuran', name: 'nominal_iuran' },
+          {
+             data: 'nominal_iuran', 
+             name: 'nominal_iuran',
+             render: function(data, type, row){
+                var nominal = "Rp. " + new Intl.NumberFormat('id-ID').format(data);
+                return '<span>' + nominal + '</span>';
+                
+             }
+
+          },
           {
               data: 'status_bayar',
               name: 'status_bayar',
