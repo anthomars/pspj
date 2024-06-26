@@ -55,79 +55,6 @@
   </div>
 </div>
 
-
-{{-- Detail modal --}}
-<div class="modal modal-blur fade" id="modal-detail" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 id="title" class="modal-title"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="mb-3">
-          <label class="form-label">Nama RT</label>
-          <input type="text" id="name_show_edit" class="form-control" placeholder="Nama RT" value="" disabled/>
-          <div class="invalid-feedback" id="message_name_show_edit" style="display: none"></div>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">No RT</label>
-          <input type="text" id="no_show_edit" class="form-control" placeholder="No. RT" value="" disabled/>
-          <div class="invalid-feedback" id="message_no_show_edit" style="display: none"></div>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Alamat RT</label>
-          <input type="text" id="address_show_edit" class="form-control" placeholder="Alamat RT" value="" disabled/>
-          <div class="invalid-feedback" id="message_address_show_edit" style="display: none"></div>
-        </div>
-        {{-- <div class="mb-3">
-            <label class="form-label">RW</label>
-            <input type="text" id="rw_id_show_edit" class="form-control number" placeholder="RW">
-            <div id="message_rw_id_show_edit" class="invalid-feedback"></div>
-        </div> --}}
-        <div class="mb-3">
-            <label class="form-label">RW</label>
-            <select type="text" class="form-select" placeholder="--Please Select--" id="rw_id_show_edit" name="rw_id_show_edit" value="" disabled>
-            </select>
-            <div class="invalid-feedback" id="message_rw_id_show_edit"></div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-link link-secondary" data-bs-dismiss="modal">
-          Cancel
-        </button>
-        <div class="ms-auto">
-
-        <button id="button_delete" class="btn btn-outline-danger">
-            Delete
-        </button>
-
-        <button id="button_edit" class="btn btn-primary">
-            <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
-                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
-                <path d="M16 5l3 3"></path>
-            </svg>
-            Edit
-        </button>
-
-          <button id="button_update" class="btn btn-primary d-none">
-            <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-              <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
-              <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
-              <path d="M16 5l3 3"></path>
-           </svg>
-            Update
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 @endsection
 @push('css')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
@@ -258,56 +185,6 @@
       deleteData(id);
     });
 
-    function detailData(id) {
-        const modalDetail = new bootstrap.Modal('#modal-detail', {
-            keyboard: false
-        })
-
-        $('#title').text('RT Detail');
-        $('#rw_id_show_edit').empty();
-
-        let dataRw = `<option value="" selected>-- Please Select --</option>`;
-
-        getRw().forEach(getDataRw);
-
-        function getDataRw(item, index) {
-            dataRw += `<option value="${item.id_rw}">${item.no_rw}</option>`;
-        }
-
-
-        $('#rw_id_show_edit').append(dataRw);
-
-        let url = "{!! url('master-data/rt/"+id+"') !!}";
-
-      $.ajax({
-        type: "GET",
-        dataType: "json",
-        url: url,
-        data: {
-          '_token' : '{{ csrf_token() }}'
-        },
-        success: function(datas){
-        //   console.log(datas);
-          $('#name_show_edit').val(datas.data[0].nama_rt);
-          $('#no_show_edit').val(datas.data[0].no_rt);
-          $('#address_show_edit').val(datas.data[0].alamat_rt);
-          $('#rw_id_show_edit').val(datas.data[0].rw_id).trigger('change');
-
-          $('#button_update').data('id',datas.data[0].id_rt)
-          $('#button_delete').data('id',datas.data[0].id_rt)
-
-          modalDetail.show();
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-          Swal.fire(
-            xhr.responseJSON.title,
-            xhr.responseJSON.message,
-            xhr.responseJSON.status
-          )
-          // console.log(xhr.responseJSON);
-        }
-      });
-    }
 
     $('#button_update').click(function (e) {
         let id = $('#button_update').data('id');

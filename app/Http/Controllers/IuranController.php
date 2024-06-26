@@ -24,8 +24,8 @@ class IuranController extends Controller
                         <div class="dropdown-menu">
                     ';
 
-                $btn .= '
-                    <button data-id="'. $row->id_rt .'"  class="dropdown-item" onclick="detailData('. $row->id_rt .')" data-toggle="tooltip" title="Detail">
+                    $btn .= '
+                    <a href="'. route('iuran.detail', ['iuran' => $row->id_iuran]) .'" class="dropdown-item" data-toggle="tooltip" title="Detail">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-info-square-rounded me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                             <path d="M12 9h.01"></path>
@@ -33,7 +33,7 @@ class IuranController extends Controller
                             <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z"></path>
                         </svg>
                         Detail
-                    </button>
+                    </a>
                 ';
 
                 $btn .= '
@@ -121,6 +121,12 @@ class IuranController extends Controller
             'redirect_url' => route('iuran.index') 
         ]);
 
+    }
+
+    public function show($id)
+    {
+        $iuran = \App\Models\Iuran::with('jenazah')->where('id_iuran', $id)->first();
+        return view('pages.iuran.show', compact('iuran'));
     }
 
 
