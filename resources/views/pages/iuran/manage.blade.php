@@ -421,7 +421,7 @@
               cancelButtonText: 'Batal'
             }).then((result) => {
               if (result.isConfirmed) {
-                let url = "{!! url('/master-data/rt/"+id+"') !!}";
+                let url = "{!! url('iuran/"+id+"') !!}";
 
                 $.ajax({
                   type: "DELETE",

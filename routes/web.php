@@ -101,5 +101,6 @@ Route::middleware('auth.user')->group(function () {
         Route::get('iuran/create', 'create')->name('iuran.create');
         Route::post('iuran/create', 'store')->name('iuran.store');
         Route::get('iuran/data', 'data')->name('iuran.dataTable');
+        Route::delete('iuran/{iuran}', 'destroy')->name('iuran.destroy');
     });
 });

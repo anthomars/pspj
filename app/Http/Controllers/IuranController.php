@@ -38,7 +38,7 @@ class IuranController extends Controller
 
                 $btn .= '
                     <div class="dropdown-divider my-1"></div>
-                    <button data-id="'. $row->id_rt .'"  class="dropdown-item text-danger" onclick="deleteData('. $row->id_rt .')" data-toggle="tooltip" title="Delete">
+                    <button data-id="'. $row->id_iuran .'"  class="dropdown-item text-danger" onclick="deleteData('. $row->id_iuran .')" data-toggle="tooltip" title="Delete">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                             <path d="M4 7l16 0"></path>
@@ -121,6 +121,26 @@ class IuranController extends Controller
             'redirect_url' => route('iuran.index') 
         ]);
 
+    }
+
+
+    public function destroy(Request $request, $id)
+    {
+        $deleteIuran = \App\Models\Iuran::where('id_iuran', $id)->delete();
+
+        if($deleteIuran) {
+            return response()->json([
+                'status' => 'success',
+                'title' => 'Sukses',
+                'message'=> 'Hapus berhasil'
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'title' => 'Gagal!',
+                'message'=> 'Gagal saat menghapus data'
+            ], 400);
+        }
     }
 
 }
