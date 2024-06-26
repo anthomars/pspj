@@ -213,8 +213,8 @@
             </a>
           </li>
 
-          <li class="nav-item {{ Request::is('jenazah*') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ url('jenazah') }}">
+          <li class="nav-item {{ Request::is('iuran*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ url('iuran') }}">
                 <span class="nav-link-icon d-md-none d-lg-inline-block ms-1">
                   <i class="fa-solid fa-receipt icon icon-tabler icons-tabler-outline icon-tabler-user-circle"></i>
                 </span>

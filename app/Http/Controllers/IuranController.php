@@ -4,15 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class IuranController extends Controller
 {
 
     public function data()
     {
-        $data = \App\Models\Iuran::orderBy('date_created','desc');
+        $data = \App\Models\Iuran::with('jenazah')->orderBy('date_created','desc');
 
         return DataTables::of($data)->addIndexColumn()
+            ->addColumn('nama_jenazah', function($row) {
+                return $row->jenazah->nama_jenazah;
+            })
             ->addColumn('action', function($row){
                 $btn = '
                     <div class="dropdown">
@@ -60,6 +64,63 @@ class IuranController extends Controller
 
     public function index()
     {
+       
         return view('pages.iuran.manage');
     }
+
+    public function create()
+    {
+        $dataJenazah = \App\Models\Jenazah::get();
+        return view('pages.iuran.create', compact('dataJenazah'));
+    }
+
+    public function store(Request $request)
+    {
+        $rules = [
+            'jenazah_id' => 'required|numeric|exists:tbl_jenazah,id_jenazah',
+            'nama_iuran' => 'required|string|max:100',
+            'nominal_iuran' => 'required|numeric',
+            'metode_bayar' => 'required',
+        ];
+
+        $messages = [
+            'jenazah_id.required' => 'Pilih salah satu',
+            'jenazah_id.numeric' => 'Format input salah',
+            'nama_iuran.required' => 'Bidang ini wajib di isi',
+            'nama_iuran.string' => 'Format input salah',
+            'nama_iuran.max' => 'Maksimal input 100 karakter',
+            'nominal_iuran.required' => 'Bidang ini wajib di isi',
+            'nominal_iuran.numeric' => 'Hanya boleh di isi angka',
+            'metode_bayar.required' => 'Pilih salah satu',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        $postData = [
+            'nama_iuran'        => $request->nama_iuran,
+            'nominal_iuran'     => $request->nominal_iuran,
+            'metode_bayar'      => $request->metode_bayar,
+            'date_created'      => date('Y-m-d'),
+            'user_id'           => auth()->user()->id,
+            'jenazah_id'        => $request->jenazah_id,
+        ];
+
+        $iuran = \App\Models\Iuran::create($postData);
+
+        return response()->json([
+            'status' => 'success',
+            'redirect_url' => route('iuran.index') 
+        ]);
+
+    }
+
 }
+

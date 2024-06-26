@@ -1,5 +1,7 @@
 @extends('layouts.template')
-@section('title', 'RT')
+
+@section('title', 'Iuran')
+
 @section('content')
 <!-- Page header -->
 <div class="page-header d-print-none">
@@ -7,20 +9,20 @@
     <div class="row g-2 align-items-center">
       <div class="col">
         <!-- Page pre-title -->
-        <div class="page-pretitle">Master Data</div>
-        <h2 class="page-title">RT</h2>
+        <div class="page-pretitle">Iuran</div>
+        <h2 class="page-title">Semua Data Iuran</h2>
       </div>
       <!-- Page title actions -->
         <div class="col-auto ms-auto d-print-none">
             <div class="btn-list">
-            <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-add">
+            <a href="{{ route('iuran.create') }}" class="btn btn-primary d-none d-sm-inline-block">
                 <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                 <path d="M12 5l0 14"></path>
                 <path d="M5 12l14 0"></path>
                 </svg>
-                Add
+                Tambah Iuran
             </a>
             </div>
         </div>
@@ -36,10 +38,11 @@
           <thead>
             <tr>
               <th>No.</th>
+              <th>Jenazah</th>
               <th>Nama Iuran</th>
               <th>Nominal</th>
-              <th>Metode Bayar</th>
               <th>Status</th>
+              <th>Tgl Dibuat</th>
               <th></th>
             </tr>
           </thead>
@@ -51,58 +54,9 @@
     </div>
   </div>
 </div>
-<div class="modal modal-blur fade" id="modal-add" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Add RT</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="mb-3">
-          <label class="form-label">Nama RT</label>
-          <input type="text" id="name" name="name" class="form-control" placeholder="Nama">
-          <div id="message_name" class="invalid-feedback"></div>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">No. RT</label>
-          <input type="text" id="no" name="no" class="form-control number" placeholder="No. RT">
-          <div id="message_no" class="invalid-feedback"></div>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Alamat RT</label>
-          <input type="text" id="address" name="address" class="form-control" placeholder="Alamat">
-          <div id="message_address" class="invalid-feedback"></div>
-        </div>
-        {{-- <div class="mb-3">
-          <label class="form-label">RW Id</label>
-          <input type="text" id="rw_id" name="rw_id" class="form-control" placeholder="Alamat">
-          <div id="message_rw_id" class="invalid-feedback"></div>
-        </div> --}}
-        <div class="mb-3">
-            <label class="form-label">RW</label>
-            <select type="text" class="form-select" placeholder="--Please Select--" id="rw_id" name="rw_id" value="">
-            </select>
-            <div class="invalid-feedback" id="message_rw_id"></div>
-        </div>
 
-      </div>
-      <div class="modal-footer">
-        <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
-          Cancel
-        </a>
-        <button type="button" id="addBtn" class="btn btn-primary ms-auto">
-          <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
-          Add
-        </button>
-        <button type="button" id="submit-loading" class="btn btn-primary ms-auto" style="display: none" disabled>
-          <span class="spinner-border spinner-border-sm me-2" role="status"></span>Loading
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+
+{{-- Detail modal --}}
 <div class="modal modal-blur fade" id="modal-detail" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -219,10 +173,18 @@
           { "data" : "id_iuran", "render": function (data, type, row, meta) {
               return meta.row + meta.settings._iDisplayStart + 1;
           }, width: '50px'  },
+          { data: 'nama_jenazah', name: 'nama_jenazah' },
           { data: 'nama_iuran', name: 'nama_iuran' },
           { data: 'nominal_iuran', name: 'nominal_iuran' },
-          { data: 'metode_bayar', name: 'metode_bayar' },
-          { data: 'status_bayar', name: 'status_bayar' },
+          {
+              data: 'status_bayar',
+              name: 'status_bayar',
+              render: function(data, type, row) {
+                var statusClass = data === 'Lunas' ? 'text-success' : 'text-danger';
+                return '<span class="text-capitalize ' + statusClass + '">' + data + '</span>';
+            }
+          },  
+          { data: 'date_created', name: 'date_created' },
           { data: 'action', name: 'action', orderable: false, searchable: false, width: '20px'},
         ],
         "search": {
@@ -240,138 +202,7 @@
       });
     });
   </script>
-  <script>
-    function getRw() {
-        var role;
-        $.ajax({
-            url: "{{ route('rw.getRw') }}",
-            dataType: 'json',
-            type: "get",
-            async: false,
-            data: {
-                '_token': '{{ csrf_token() }}',
-            },
-            success: function(data) {
-                role = data.data;
-            },
-            error: function(xhr) {},
-        });
 
-        return role;
-    }
-  </script>
-  <script>
-    $('#modal-add').on('hidden.bs.modal', function () {
-        $('#name').removeClass('is-invalid');
-        $('#no').removeClass('is-invalid');
-        $('#address').removeClass('is-invalid');
-        $('#rw_id').removeClass('is-invalid');
-        $('#message_name').css('display','none');
-        $('#message_no').css('display','none');
-        $('#message_address').css('display','none');
-        $('#message_rw_id').css('display','none');
-
-        $('#rw_id').empty();
-    });
-    $('#modal-add').on('shown.bs.modal', function() {
-            let dataRw = `<option value="" selected disabled>-- Please Select --</option>`;
-
-            getRw().forEach(getDataRw);
-
-            function getDataRw(item, index) {
-                dataRw += `<option value="${item.id_rw}">${item.no_rw}</option>`;
-            }
-
-            $('#rw_id').append(dataRw);
-        });
-
-    $(function () {
-      $('#addBtn').click(function (e) {
-        let name = $('#name').val();
-        let no = $('#no').val();
-        let address = $('#address').val();
-        // let rw_id = $('#rw_id').val();
-        let rw_id = $('#rw_id option:selected').val();
-
-        $.ajax({
-            url: "{{ url('master-data/rt') }}",
-            dataType: 'json',
-            type: "POST",
-            data: {
-                '_token' : '{{ csrf_token() }}',
-                'nama_rt' : name,
-                'no_rt' : no,
-                'alamat_rt' : address,
-                'rw_id' : rw_id,
-            },
-            beforeSend: function() {
-                $('.overlay_submit_loading').addClass('show_loading');
-                $('.spanner_submit_loading').addClass('show_loading');
-                $('#submit-loading').css('display','inline-block');
-                $('#addBtn').addClass('d-none');
-            },
-            success: function (data) {
-                $('#name').val('');
-                $('#no').val('');
-                $('#address').val('');
-                // $('#rw_id').val('');
-                $('#modal-add').modal('hide');
-
-                $('#data-datatable').DataTable().ajax.reload();
-
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    width: 'auto',
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                        toast.addEventListener('mouseleave', Swal.resumeTimer)
-                    }
-                })
-
-                Toast.fire({
-                icon: 'success',
-                title: data.message
-                })
-            },
-            error: function (xhr) {
-            //   console.log(xhr);
-              $('#modal-add').modal('show');
-              if (xhr.responseJSON.errors.nama_rt !== undefined) {
-                  $('#name').addClass('is-invalid');
-                  $('#message_name').css('display','inline-block');
-                  $('#message_name').text(xhr.responseJSON.errors.nama_rt[0]);
-              }
-              if (xhr.responseJSON.errors.no_rt !== undefined) {
-                  $('#no').addClass('is-invalid');
-                  $('#message_no').css('display','inline-block');
-                  $('#message_no').text(xhr.responseJSON.errors.no_rt[0]);
-              }
-              if (xhr.responseJSON.errors.alamat_rt !== undefined) {
-                  $('#address').addClass('is-invalid');
-                  $('#message_address').css('display','inline-block');
-                  $('#message_address').text(xhr.responseJSON.errors.alamat_rt[0]);
-              }
-              if (xhr.responseJSON.errors.rw_id !== undefined) {
-                  $('#address').addClass('is-invalid');
-                  $('#message_rw_id').css('display','inline-block');
-                  $('#message_rw_id').text(xhr.responseJSON.errors.rw_id[0]);
-              }
-            },
-            complete: function() {
-                $('.overlay_submit_loading').removeClass('show_loading');
-                $('.spanner_submit_loading').removeClass('show_loading');
-
-                $('#submit-loading').css('display','none');
-                $('#addBtn').removeClass('d-none');
-            },
-        });
-      });
-    });
-  </script>
   <script>
     $('#modal-detail').on('hidden.bs.modal', function () {
       $('#title').text('RT Detail');

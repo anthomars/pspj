@@ -10,6 +10,17 @@ use Yajra\DataTables\Facades\DataTables;
 
 class JenazahController extends Controller
 {
+
+    public function getJenazah()
+    {
+        $rw = \App\Models\Jenazah::all();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $rw
+        ]);
+    }
+
     public function data() {
         $data = Jenazah::orderBy('id_jenazah','ASC');
 

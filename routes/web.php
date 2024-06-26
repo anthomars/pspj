@@ -92,11 +92,14 @@ Route::middleware('auth.user')->group(function () {
 
     // Jenazah
     Route::get('jenazah/data', [JenazahController::class, 'data'])->name('jenazah.dataTable');
+    Route::get('jenazah/get_data', [JenazahController::class, 'getJenazah'])->name('jenazah.getJenazah');
     Route::resource('jenazah', JenazahController::class);
 
     //Iuran
     Route::controller(\App\Http\Controllers\IuranController::class)->group(function(){
         Route::get('iuran', 'index')->name('iuran.index');
+        Route::get('iuran/create', 'create')->name('iuran.create');
+        Route::post('iuran/create', 'store')->name('iuran.store');
         Route::get('iuran/data', 'data')->name('iuran.dataTable');
     });
 });
