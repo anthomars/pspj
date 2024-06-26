@@ -53,18 +53,8 @@
                                 <input type="text" class="form-control" name="nominal_iuran" id="nominal_iuran" placeholder="Masukan Nominal Iuran">
                                 <span class="invalid-feedback" id="nominalIuranError"></span>
                             </div>
-                            <div class="mb-3">
-                                <label for="metode_bayar">Metode Pembayaran</label>
-                                <select name="metode_bayar" id="metode_bayar" class="form-select">
-                                    <option value="" hidden>--Pilih--</option>
-                                    <option value="1">Tunai</option>
-                                    <option value="2">Bank Transfer</option>
-                                </select>
-                                <span class="invalid-feedback" id="metodeBayarError"></span>
-                            </div>
                         </div>
-
-
+                        <div id="result" class="mt-3"></div>
                         <div class="card-footer">
                             <a href="{{ route('iuran.index') }}" class="btn btn-dark">Batal</a>
                             <button type="submit" class="btn btn-primary">Submit</button>
@@ -128,12 +118,8 @@
                             $('#nominalIuranError').text(errors.nominal_iuran[0]);
                         }
 
-                        if(errors.metode_bayar){
-                            $('#metode_bayar').addClass('is-invalid');
-                            $('#metodeBayarError').text(errors.metode_bayar[0]);
-                        }
                     } else {
-                        $('#result').html('<div class="alert alert-danger">Error occurred while creating post.</div>');
+                        $('#result').html('<div class="alert alert-danger">Terjadi kesalahan saat menyimpan data.</div>');
                     }
                 }
             });

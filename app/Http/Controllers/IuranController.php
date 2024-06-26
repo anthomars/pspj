@@ -80,7 +80,6 @@ class IuranController extends Controller
             'jenazah_id' => 'required|numeric|exists:tbl_jenazah,id_jenazah',
             'nama_iuran' => 'required|string|max:100',
             'nominal_iuran' => 'required|numeric',
-            'metode_bayar' => 'required',
         ];
 
         $messages = [
@@ -91,7 +90,6 @@ class IuranController extends Controller
             'nama_iuran.max' => 'Maksimal input 100 karakter',
             'nominal_iuran.required' => 'Bidang ini wajib di isi',
             'nominal_iuran.numeric' => 'Hanya boleh di isi angka',
-            'metode_bayar.required' => 'Pilih salah satu',
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -107,7 +105,6 @@ class IuranController extends Controller
         $postData = [
             'nama_iuran'        => $request->nama_iuran,
             'nominal_iuran'     => $request->nominal_iuran,
-            'metode_bayar'      => $request->metode_bayar,
             'date_created'      => date('Y-m-d'),
             'user_id'           => auth()->user()->id,
             'jenazah_id'        => $request->jenazah_id,

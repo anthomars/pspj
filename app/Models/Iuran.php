@@ -14,9 +14,7 @@ class Iuran extends Model
     protected $fillable = [
         'nama_iuran',
         'nominal_iuran',
-        'metode_bayar',
         'status_bayar',
-        'tgl_bayar',
         'author_create',
         'author_update',
         'date_created',
