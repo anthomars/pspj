@@ -48,14 +48,26 @@ class PembayaranController extends Controller
         ];
 
         $pembayaran = \App\Models\Pembayaran::create($postData);
-        $statusBayar = 'lunas';
+        $statusBayar = 'menunggu konfirmasi';
         $updateStatusIuran = \App\Models\Iuran::where('id_iuran', $iuran_id)->update(array('status_bayar' => $statusBayar));
-
         return response()->json([
             'status' => 'success',
-            'message' => 'Simpan berhasil',
+            'message' => 'Pembayaran berhasil disimpan',
             'redirect_url' => route('iuran.detail', $iuran_id)
         ]);
 
+    }
+
+    public function confirmPayment(Request $request)
+    {
+        $id_iuran = $request->iuran_id;
+        $statusBayar = 'lunas';
+        $updateStatusIuran = \App\Models\Iuran::where('id_iuran', $id_iuran)->update(array('status_bayar' => $statusBayar));
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Pembayaran berhasil diubah',
+            'redirect_url' => route('iuran.detail', $id_iuran)
+        ]);
     }
 }

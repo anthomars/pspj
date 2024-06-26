@@ -111,6 +111,7 @@ Route::middleware('auth.user')->group(function () {
         //Pembayaran
         Route::controller(\App\Http\Controllers\PembayaranController::class)->group(function(){
             Route::post('pembayaran', 'store')->name('pembayaran.store');
+            Route::post('pembayaran/confirm', 'confirmPayment')->name('pembayaran.confirm');
         });
     });
 

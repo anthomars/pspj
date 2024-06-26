@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('id_iuran');
             $table->string('nama_iuran');
             $table->integer('nominal_iuran');
-            $table->enum('status_bayar', ['belum lunas', 'lunas',])->default('belum lunas');
+            $table->enum('status_bayar', ['belum lunas', 'menunggu konfirmasi', 'lunas',])->default('belum lunas');
             $table->string('author_create')->nullable();
             $table->string('author_update')->nullable();
             $table->date('date_created');

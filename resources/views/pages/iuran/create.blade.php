@@ -34,7 +34,17 @@
                         @csrf
                         <div class="card-body">
                             <div class="mb-3">
-                                <label for="jenazah_id">Jenazah</label>
+                                <label for="user_id">Nama Keluarga</label>
+                                <select name="user_id" id="user_id" class="form-select">
+                                    <option value="" hidden>--Pilih--</option>
+                                    @foreach ($warga as $wrg)
+                                        <option value="{{ $wrg->id }}">{{ $wrg->nama_lengkap }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="invalid-feedback" id="userError"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label for="jenazah_id">Nama Jenazah</label>
                                 <select name="jenazah_id" id="jenazah_id" class="form-select">
                                     <option value="" hidden>--Pilih--</option>
                                     @foreach ($dataJenazah as $jenazah)
@@ -105,6 +115,10 @@
                 error: function(response) {
                     if(response.status === 400) {
                         var errors = response.responseJSON.errors;
+                        if(errors.jenazah_id){
+                            $('#user_id').addClass('is-invalid');
+                            $('#userError').text(errors.user_id[0]);
+                        }
                         if(errors.jenazah_id){
                             $('#jenazah_id').addClass('is-invalid');
                             $('#jenazahError').text(errors.jenazah_id[0]);

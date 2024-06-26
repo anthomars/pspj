@@ -34,11 +34,15 @@
                         <div class="table-responsive">
                             <form>
                                 <div class="mb-3">
+                                    <label for="user_id">Nama Keluarga</label>
+                                    <input type="text" name="user_id" id="user_id" value="{{ $iuran->user->nama_lengkap }}" class="form-control" readonly>
+                                </div>
+                                <div class="mb-3">
                                     <label for="jenazah_id">Nama Jenazah</label>
                                     <input type="text" name="jenazah_id" id="jenazah_id" value="{{ $iuran->jenazah->nama_jenazah }}" class="form-control" readonly>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="nama_iuran">Nama Iuran</label>
+                                    <label for="nama_iuran">Jenis Iuran</label>
                                     <input type="text" name="nama_iuran" id="nama_iuran" value="{{ $iuran->nama_iuran }}" class="form-control" readonly>
                                 </div>
                                 <div class="mb-3">
@@ -104,6 +108,35 @@
                     </div>
                 </div>
             @endif
+
+            @if($iuran->status_bayar == 'lunas' || $iuran->status_bayar == 'menunggu konfirmasi')
+                <div class="col-md-4">
+                    <div class="accordion accordion-flush" id="accordionFlushExample">
+                        <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                            Lampiran Pembayaran
+                            </button>
+                        </h2>
+                        <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">
+                                <form id="updatePembayaranForm" enctype="multipart/form-data">
+                                @csrf
+                                    <input type="hidden" value="{{ $iuran->id_iuran }}" name="iuran_id">
+                                    <img src="{{ asset('uploads/images/' . $pembayaran->bukti_bayar) }}" alt="bukti bayar" class="mb-4">
+                                    @if(Auth::user()->role_id != 5 && $iuran->status_bayar != 'lunas')
+                                    <button type="submit" class="btn btn-success">Tandai Sebagai Lunas</button>
+                                    @endif
+                                </form>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            
+
         </div>
     </div>
   </div>
@@ -161,6 +194,58 @@
                         if(errors.bukti_bayar) {
                             $('#bukti_bayar').addClass('is-invalid');
                             $('#buktiBayarError').text(errors.bukti_bayar[0]);
+                        }
+
+                    } else {
+                        $('#result').html('<div class="alert alert-danger">Terjadi kesalahan saat menyimpan data.</div>');
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#updatePembayaranForm').on('submit', function(e) {
+            e.preventDefault();
+
+            // Clear previous errors and remove is-invalid class
+            $('.form-control').removeClass('is-invalid');
+            $('.invalid-feedback').text('');
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: "{{ route('pembayaran.confirm') }}",
+                method: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if(response.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: response.message,
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            },
+                            willClose: () => {
+                                window.location.href = response.redirect_url;
+                            }
+                        });
+                    }
+
+                },
+                error: function(response) {
+                    if(response.status === 400) {
+                        var errors = response.responseJSON.errors;
+                        if(errors.iuran_id){
+                            $('#iuran_id').addClass('is-invalid');
+                            $('#tglBayarError').text(errors.iuran_id[0]);
                         }
 
                     } else {

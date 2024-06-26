@@ -13,14 +13,17 @@ class IuranController extends Controller
     {
         $currentUser = auth()->user()->id;
         if(auth()->user()->role_id == 5){
-            $data = \App\Models\Iuran::with('jenazah')->where('user_id', $currentUser)->orderBy('date_created','desc');
+            $data = \App\Models\Iuran::with(['jenazah', 'user'])->where('user_id', $currentUser)->orderBy('date_created','desc');
         }else{
-            $data = \App\Models\Iuran::with('jenazah')->orderBy('date_created','desc');
+            $data = \App\Models\Iuran::with(['jenazah', 'user'])->orderBy('date_created','desc');
         }
 
         return DataTables::of($data)->addIndexColumn()
             ->addColumn('nama_jenazah', function($row) {
                 return $row->jenazah->nama_jenazah;
+            })
+            ->addColumn('nama_keluarga', function($row) {
+                return $row->user->nama_lengkap;
             })
             ->addColumn('action', function($row){
                 $btn = '
@@ -78,18 +81,21 @@ class IuranController extends Controller
     public function create()
     {
         $dataJenazah = \App\Models\Jenazah::get();
-        return view('pages.iuran.create', compact('dataJenazah'));
+        $warga = \App\Models\User::where('role_id', 5)->get();
+        return view('pages.iuran.create', compact('dataJenazah', 'warga'));
     }
 
     public function store(Request $request)
     {
         $rules = [
+            'user_id'   => 'required|numeric|exists:users,id',
             'jenazah_id' => 'required|numeric|exists:tbl_jenazah,id_jenazah',
             'nama_iuran' => 'required|string|max:100',
             'nominal_iuran' => 'required|numeric',
         ];
 
         $messages = [
+            'user_id.required'  => 'Pilih salah satu',
             'jenazah_id.required' => 'Pilih salah satu',
             'jenazah_id.numeric' => 'Format input salah',
             'nama_iuran.required' => 'Bidang ini wajib di isi',
@@ -113,7 +119,7 @@ class IuranController extends Controller
             'nama_iuran'        => $request->nama_iuran,
             'nominal_iuran'     => $request->nominal_iuran,
             'date_created'      => date('Y-m-d'),
-            'user_id'           => auth()->user()->id,
+            'user_id'           => $request->user_id,
             'jenazah_id'        => $request->jenazah_id,
         ];
 
@@ -129,8 +135,9 @@ class IuranController extends Controller
 
     public function show($id)
     {
-        $iuran = \App\Models\Iuran::with('jenazah')->where('id_iuran', $id)->first();
-        return view('pages.iuran.show', compact('iuran'));
+        $iuran = \App\Models\Iuran::with(['jenazah', 'user'])->where('id_iuran', $id)->first();
+        $pembayaran = \App\Models\Pembayaran::where('iuran_id', $id)->first();
+        return view('pages.iuran.show', compact('iuran', 'pembayaran'));
     }
 
 

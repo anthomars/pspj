@@ -40,8 +40,9 @@
           <thead>
             <tr>
               <th>No.</th>
-              <th>Jenazah</th>
-              <th>Nama Iuran</th>
+              <th>Nama Keluarga</th>
+              <th>Nama Jenazah</th>
+              <th>Jenis Iuran</th>
               <th>Nominal</th>
               <th>Status</th>
               <th>Tgl Dibuat</th>
@@ -102,6 +103,7 @@
           { "data" : "id_iuran", "render": function (data, type, row, meta) {
               return meta.row + meta.settings._iDisplayStart + 1;
           }, width: '50px'  },
+          { data: 'nama_keluarga', name: 'nama_keluarga' },
           { data: 'nama_jenazah', name: 'nama_jenazah' },
           { data: 'nama_iuran', name: 'nama_iuran' },
           {
