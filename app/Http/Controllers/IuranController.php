@@ -11,7 +11,12 @@ class IuranController extends Controller
 
     public function data()
     {
-        $data = \App\Models\Iuran::with('jenazah')->orderBy('date_created','desc');
+        $currentUser = auth()->user()->id;
+        if(auth()->user()->role_id == 5){
+            $data = \App\Models\Iuran::with('jenazah')->where('user_id', $currentUser)->orderBy('date_created','desc');
+        }else{
+            $data = \App\Models\Iuran::with('jenazah')->orderBy('date_created','desc');
+        }
 
         return DataTables::of($data)->addIndexColumn()
             ->addColumn('nama_jenazah', function($row) {
@@ -35,21 +40,23 @@ class IuranController extends Controller
                         Detail
                     </a>
                 ';
+                if(auth()->user()->role_id != 5){
 
-                $btn .= '
-                    <div class="dropdown-divider my-1"></div>
-                    <button data-id="'. $row->id_iuran .'"  class="dropdown-item text-danger" onclick="deleteData('. $row->id_iuran .')" data-toggle="tooltip" title="Delete">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                            <path d="M4 7l16 0"></path>
-                            <path d="M10 11l0 6"></path>
-                            <path d="M14 11l0 6"></path>
-                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
-                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
-                        </svg>
-                    Delete
-                    </button>
-                ';
+                    $btn .= '
+                        <div class="dropdown-divider my-1"></div>
+                        <button data-id="'. $row->id_iuran .'"  class="dropdown-item text-danger" onclick="deleteData('. $row->id_iuran .')" data-toggle="tooltip" title="Delete">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M4 7l16 0"></path>
+                                <path d="M10 11l0 6"></path>
+                                <path d="M14 11l0 6"></path>
+                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                            </svg>
+                        Delete
+                        </button>
+                    ';
+                }
 
                 $btn .= '
                         </div>

@@ -95,13 +95,23 @@ Route::middleware('auth.user')->group(function () {
     Route::get('jenazah/get_data', [JenazahController::class, 'getJenazah'])->name('jenazah.getJenazah');
     Route::resource('jenazah', JenazahController::class);
 
-    //Iuran
-    Route::controller(\App\Http\Controllers\IuranController::class)->group(function(){
-        Route::get('iuran', 'index')->name('iuran.index');
-        Route::get('iuran/create', 'create')->name('iuran.create');
-        Route::post('iuran/create', 'store')->name('iuran.store');
-        Route::get('iuran/data', 'data')->name('iuran.dataTable');
-        Route::get('iuran/detail/{iuran}', 'show')->name('iuran.detail');
-        Route::delete('iuran/{iuran}', 'destroy')->name('iuran.destroy');
+    //Iuran & Pembayaran
+    Route::prefix('iuran')->group(function(){
+
+        //Iuran
+        Route::controller(\App\Http\Controllers\IuranController::class)->group(function(){
+            Route::get('/', 'index')->name('iuran.index');
+            Route::get('create', 'create')->name('iuran.create');
+            Route::post('create', 'store')->name('iuran.store');
+            Route::get('data', 'data')->name('iuran.dataTable');
+            Route::get('detail/{iuran}', 'show')->name('iuran.detail');
+            Route::delete('{iuran}', 'destroy')->name('iuran.destroy');
+        });
+    
+        //Pembayaran
+        Route::controller(\App\Http\Controllers\PembayaranController::class)->group(function(){
+            Route::post('pembayaran', 'store')->name('pembayaran.store');
+        });
     });
+
 });

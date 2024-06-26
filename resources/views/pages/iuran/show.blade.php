@@ -59,21 +59,116 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="accordion accordion-flush" id="accordionFlushExample">
-                    <div class="accordion-item">
-                      <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                          Pembayaran
-                        </button>
-                      </h2>
-                      <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
-                      </div>
+            @if($iuran->status_bayar == 'belum lunas')
+                <div class="col-md-4">
+                    <div class="accordion accordion-flush" id="accordionFlushExample">
+                        <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                            Pembayaran
+                            </button>
+                        </h2>
+                        <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">
+                                <form id="pembayaranForm" enctype="multipart/form-data">
+                                @csrf
+                                    <input type="hidden" value="{{ $iuran->id_iuran }}" name="iuran_id">
+
+                                    <div class="mb-3">
+                                    <label for="tgl_bayar">Tanggal Pembayaran</label>
+                                    <input type="date" name="tgl_bayar" id="tgl_bayar" class="form-control">
+                                    <span class="invalid-feedback" id="tglBayarError"></span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                    <label for="metode_bayar">Metode Pembayaran</label>
+                                    <select name="metode_bayar" id="metode_bayar" class="form-select">
+                                        <option value="" hidden>--Pilih--</option>
+                                        <option value="1">Tunai</option>
+                                        <option value="2">Transfer Bank</option>
+                                    </select>
+                                    <span class="invalid-feedback" id="metodeBayarError"></span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                    <label for="bukti_bayar">Lampiran Bukti Bayar</label>
+                                    <input type="file" name="bukti_bayar" id="bukti_bayar" class="form-control" accept=".png,.jpeg,.jpg">
+                                    <small>Ekstensi yang diperbolehkan: .PNG,.JPG,.JPEG. Max:500KB</small>
+                                    <span class="invalid-feedback" id="buktiBayarError"></span>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                        </div>
                     </div>
-                  </div>
-            </div>
+                </div>
+            @endif
         </div>
     </div>
   </div>
 @endsection
+
+@push('js')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#pembayaranForm').on('submit', function(e) {
+            e.preventDefault();
+
+            // Clear previous errors and remove is-invalid class
+            $('.form-control').removeClass('is-invalid');
+            $('.invalid-feedback').text('');
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: "{{ route('pembayaran.store') }}",
+                method: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if(response.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: response.message,
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            },
+                            willClose: () => {
+                                window.location.href = response.redirect_url;
+                            }
+                        });
+                    }
+
+                },
+                error: function(response) {
+                    if(response.status === 400) {
+                        var errors = response.responseJSON.errors;
+                        if(errors.tgl_bayar){
+                            $('#tgl_bayar').addClass('is-invalid');
+                            $('#tglBayarError').text(errors.tgl_bayar[0]);
+                        }
+
+                        if(errors.metode_bayar) {
+                            $('#metode_bayar').addClass('is-invalid');
+                            $('#metodeBayarError').text(errors.metode_bayar[0]);
+                        }
+                        if(errors.bukti_bayar) {
+                            $('#bukti_bayar').addClass('is-invalid');
+                            $('#buktiBayarError').text(errors.bukti_bayar[0]);
+                        }
+
+                    } else {
+                        $('#result').html('<div class="alert alert-danger">Terjadi kesalahan saat menyimpan data.</div>');
+                    }
+                }
+            });
+        });
+    });
+</script>
+@endpush

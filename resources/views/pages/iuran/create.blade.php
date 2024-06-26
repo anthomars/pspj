@@ -30,7 +30,7 @@
         <div class="row d-flex justify-content-center">
             <div class="col-md-10">
                 <div class="card p-3">
-                    <form id="iuranForm">
+                    <form id="iuranForm" >
                         @csrf
                         <div class="card-body">
                             <div class="mb-3">
@@ -78,12 +78,13 @@
             $('.form-control').removeClass('is-invalid');
             $('.invalid-feedback').text('');
 
+            var formData = new FormData(this);
+            
             $.ajax({
                 url: "{{ route('iuran.store') }}",
                 method: "POST",
                 data: $(this).serialize(),
                 success: function(response) {
-                    // $('#result').html('<div class="alert alert-success">Post created successfully!</div>');
                     if(response.status === 'success') {
                         Swal.fire({
                             icon: 'success',
