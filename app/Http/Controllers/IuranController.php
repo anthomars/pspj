@@ -117,6 +117,7 @@ class IuranController extends Controller
 
         return response()->json([
             'status' => 'success',
+            'message' => 'Simpan berhasil',
             'redirect_url' => route('iuran.index') 
         ]);
 

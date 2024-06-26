@@ -95,8 +95,21 @@
                 success: function(response) {
                     // $('#result').html('<div class="alert alert-success">Post created successfully!</div>');
                     if(response.status === 'success') {
-                        window.location.href = response.redirect_url;
+                        Swal.fire({
+                            icon: 'success',
+                            title: response.message,
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            },
+                            willClose: () => {
+                                window.location.href = response.redirect_url;
+                            }
+                        });
                     }
+
                 },
                 error: function(response) {
                     if(response.status === 400) {
