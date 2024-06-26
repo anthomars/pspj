@@ -53,6 +53,7 @@
                                     <label for="status_bayar">Status</label>
                                     <input type="text" name="status_bayar" id="status_bayar" value="{{ $iuran->status_bayar }}" class="form-control" readonly>
                                 </div>
+                                <a href="{{ route('iuran.index') }}" class="btn btn-dark">Kembali</a>
                             </form>
                         </div>
                     </div>
