@@ -16,7 +16,17 @@
         <div class="col-auto ms-auto d-print-none">
             <div class="btn-list">
               @if(Auth::user()->role_id != 5)
-            <a href="{{ route('iuran.create') }}" class="btn btn-primary d-none d-sm-inline-block">
+              <a href="#" id="cronjob_btn" class="btn btn-primary d-none d-sm-inline-block">
+                  <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M12 5l0 14"></path>
+                  <path d="M5 12l14 0"></path>
+                  </svg>
+                  Generate Iuran Berulang
+              </a>
+
+              <a href="{{ route('iuran.create') }}" class="btn btn-primary d-none d-sm-inline-block">
                 <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -287,6 +297,59 @@
         });
     });
   </script>
+
+<script>
+  $(document).ready(function() {
+      $("#cronjob_btn").on("click", function(e) {
+          e.preventDefault();
+          runCronJob();
+      });
+
+      function runCronJob() {
+          $.ajax({
+              url: '{{ route("iuran.cronjob_manually") }}', // Ubah dengan route yang sesuai
+              type: 'GET',
+              data: {
+                  _token: '{{ csrf_token() }}' // Sertakan token CSRF
+              },
+              success: function(response) {
+                  if(response.status === 'success') {
+                    Swal.fire({
+                            icon: 'success',
+                            title: response.message,
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            },
+                            willClose: () => {
+                                window.location.href = response.redirect_url;
+                            }
+                    });
+                  } else {
+                    Swal.fire({
+                            icon: 'error',
+                            title: response.message,
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            },
+                            willClose: () => {
+                                window.location.href = response.redirect_url;
+                            }
+                    });
+                  }
+              },
+              error: function(xhr, status, error) {
+                  alert('Error: ' + error);
+              }
+          });
+      }
+  });
+</script>
 
   <script>
     function deleteData(id) {

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class IuranController extends Controller
 {
@@ -158,6 +160,63 @@ class IuranController extends Controller
                 'message'=> 'Gagal saat menghapus data'
             ], 400);
         }
+    }
+
+
+    /**
+     * Running cronjob manual
+     */
+    public function runCronJob()
+    {
+        $today = Carbon::today();
+        $firstDayOfMonth = $today->firstOfMonth();
+        if ($today->eq($firstDayOfMonth)) {
+            $this->copyLastInvoices();
+            return response()->json([
+                'status' => 'success', 
+                'message' => 'Iuran berhasil dibuat.',
+                'redirect_url' => route('iuran.index') 
+            ]);
+        }else{
+            return response()->json([
+                'status' => 'error', 
+                'message' => 'Gagal membuat iuran',
+                'redirect_url' => route('iuran.index') 
+            ]);
+        }
+        return view('pages.iuran.manage');
+    }
+
+    /**
+     * Generate faktur per tgl 01 per bulan secara otomatis
+     */
+    private function copyLastInvoices()
+    {
+        // Dapatkan tanggal 01 bulan ini
+        $today = Carbon::today();
+        $firstDayOfMonth = $today->firstOfMonth();
+
+            if ($today->eq($firstDayOfMonth)) {
+                $lastIuran = \App\Models\Iuran::select('tbl_iuran.*')
+                    ->join(DB::raw('(SELECT MAX(id_iuran) as max_id FROM tbl_iuran GROUP BY user_id) as grouped_iurans'), function ($join) {
+                        $join->on('tbl_iuran.id_iuran', '=', 'grouped_iurans.max_id');
+                    })
+                    ->get();
+                foreach($lastIuran as $iuran){
+                    \App\Models\Iuran::create([
+                        'nama_iuran'        => $iuran->nama_iuran,
+                        'nominal_iuran'     => $iuran->nominal_iuran,
+                        'date_created'      => $today,
+                        'user_id'           => $iuran->user_id,
+                        'jenazah_id'        => $iuran->jenazah_id,
+                    ]);
+            }
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Hari ini bukan tanggal 01.'
+        ]);
     }
 
 }

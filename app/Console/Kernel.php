@@ -13,6 +13,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+        
+         // Jalankan fungsi copyLastInvoices di IuranController setiap tanggal 1 per bulan
+         $schedule->call(function () {
+            app('App\Http\Controllers\IuranController')->copyLastInvoices();
+        })->monthlyOn(1, '00:00');
     }
 
     /**
