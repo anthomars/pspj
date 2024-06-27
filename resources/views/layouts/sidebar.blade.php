@@ -213,15 +213,24 @@
             </a>
           </li>
 
-          <li class="nav-item {{ Request::is('iuran*') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ url('iuran') }}">
-                <span class="nav-link-icon d-md-none d-lg-inline-block ms-1">
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#navbar-help" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
+                <span class="nav-link-icon d-md-none d-lg-inline-block ms-1"><!-- Download SVG icon from http://tabler-icons.io/i/lifebuoy -->
                   <i class="fa-solid fa-receipt icon icon-tabler icons-tabler-outline icon-tabler-user-circle"></i>
                 </span>
                 <span class="nav-link-title">
                     Iuran
                 </span>
             </a>
+            <div class="dropdown-menu {{ request()->is('iuran') || request()->is('iuran/*') ? 'show' : '' }}">
+                <a class="dropdown-item {{ request()->is('iuran') || request()->is('iuran/create') || request()->is('iuran/detail/*') ? 'active' : '' }}" href="{{ route('iuran.index') }}" rel="noopener">
+                    Data Iuran
+                </a>
+                <a class="dropdown-item {{ request()->is('iuran/data_pembayaran') ? 'active' : '' }}" href="{{ route('pembayaran.index') }}" rel="noopener">
+                    Pembayaran
+                </a>
+            </div>
           </li>
 
           <li class="nav-item {{ Request::is('jenazah*') ? 'active' : '' }}">

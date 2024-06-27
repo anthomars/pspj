@@ -4,9 +4,68 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\Facades\DataTables;
 
 class PembayaranController extends Controller
 {
+    public function getData()
+    {
+        $currentUser = auth()->user()->id;
+        if(auth()->user()->role_id == 5){
+            $data = \App\Models\Pembayaran::whereHas('iuran', function ($query) use ($currentUser) {
+                $query->where('user_id', $currentUser);
+            })->with('iuran')->latest();
+        }else{
+            $data = \App\Models\Pembayaran::with('iuran')->latest();
+        }
+
+        return DataTables::of($data)->addIndexColumn()
+            ->addColumn('nama_iuran', function($row) {
+                return $row->iuran->nama_iuran;
+            })
+            ->addColumn('nominal_iuran', function($row) {
+                return $row->iuran->nominal_iuran;
+            })
+            ->addColumn('status_bayar', function($row) {
+                return $row->iuran->status_bayar;
+            })
+            ->addColumn('action', function($row){
+                $btn = '
+                    <div class="dropdown">
+                        <a href="#" class="btn dropdown-toggle" data-bs-toggle="dropdown">Actions</a>
+                        <div class="dropdown-menu">
+                    ';
+
+                    $btn .= '
+                    <a href="'. route('iuran.detail', ['iuran' => $row->iuran_id]) .'" class="dropdown-item" data-toggle="tooltip" title="Detail">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-info-square-rounded me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M12 9h.01"></path>
+                            <path d="M11 12h1v4h1"></path>
+                            <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z"></path>
+                        </svg>
+                        Detail
+                    </a>
+                ';
+             
+
+                $btn .= '
+                        </div>
+                    </div>
+                    ';
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->escapeColumns([])
+            ->toJson();
+    }
+
+
+    public function index()
+    {
+        return view('pages.pembayaran.index');
+    }
+
     public function store(Request $request)
     {
         $iuran_id = $request->iuran_id;

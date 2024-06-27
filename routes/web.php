@@ -110,6 +110,8 @@ Route::middleware('auth.user')->group(function () {
     
         //Pembayaran
         Route::controller(\App\Http\Controllers\PembayaranController::class)->group(function(){
+            Route::get('get_data', 'getData')->name('pembayaran.dataTable');
+            Route::get('data_pembayaran', 'index')->name('pembayaran.index');
             Route::post('pembayaran', 'store')->name('pembayaran.store');
             Route::post('pembayaran/confirm', 'confirmPayment')->name('pembayaran.confirm');
         });
