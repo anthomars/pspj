@@ -117,12 +117,17 @@ Route::middleware('auth.user')->group(function () {
             Route::post('pembayaran', 'store')->name('pembayaran.store');
             Route::post('pembayaran/confirm', 'confirmPayment')->name('pembayaran.confirm');
         });
+    });
 
-        //Pemakaman
-        Route::controller(\App\Http\Controllers\PemakamanController::class)->group(function(){
-            
-        });
-
+     //Pemakaman
+     Route::controller(\App\Http\Controllers\PemakamanController::class)->group(function(){
+        Route::get('makam/get_data', 'data')->name('makam.dataTable');
+        Route::get('makam', 'index')->name('makam.index');
+        Route::get('makam/create', 'create')->name('makam.create');
+        Route::post('makam/create', 'store')->name('makam.store');
+        Route::get('makam/edit/{id}', 'edit')->name('makam.edit');
+        Route::put('makam/edit/{id}', 'update')->name('makam.update');
+        Route::delete('makam/{id}', 'destroy')->name('makam.destroy');
     });
 
 });

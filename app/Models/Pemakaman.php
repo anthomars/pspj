@@ -25,7 +25,7 @@ class Pemakaman extends Model
         'status_bayar',
     ];
 
-    public function blok_pemakaman()
+    public function blok()
     {
         return $this->belongsTo(BlokPemakaman::class, 'blok_pemakaman_id', 'id_blok_pemakaman');
     }
