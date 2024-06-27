@@ -11,8 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pemakamen', function (Blueprint $table) {
+        Schema::create('tbl_pemakaman', function (Blueprint $table) {
             $table->id();
+            $table->integer('blok_pemakaman_id');
+            $table->string('status_pemakaman');
+            $table->date('tgl_pemakaman');
+            $table->time('jam_pemakaman');
+            $table->string('author_create')->nullable();
+            $table->string('author_update')->nullable();
+            $table->date('date_created');
+            $table->string('nama_biaya');
+            $table->integer('nominal_biaya');
+            $table->enum('status_bayar', ['belum lunas', 'lunas'])->default('belum lunas');
             $table->timestamps();
         });
     }
@@ -22,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pemakamen');
+        Schema::dropIfExists('tbl_pemakaman');
     }
 };
