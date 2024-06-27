@@ -8,9 +8,18 @@ use Illuminate\Support\Facades\Validator;
 
 class PemakamanController extends Controller
 {
-    public function data()
+    public function data(Request $request)
     {
-        $data = \App\Models\Pemakaman::with(['blok'])->orderBy('date_created','desc');
+        $data = \App\Models\Pemakaman::with(['blok'])
+            ->orderBy('date_created', 'desc');
+
+        if ($request->has('status_bayar') && !empty($request->status_bayar)) {
+            $data->where('status_bayar', $request->status_bayar);
+        }
+
+        if ($request->has('blok_pemakaman_id') && !empty($request->blok_pemakaman_id)) {
+            $data->where('blok_pemakaman_id', $request->blok_pemakaman_id);
+        }
 
         return DataTables::of($data)->addIndexColumn()
             ->addColumn('nama_blok', function($row) {
@@ -23,7 +32,7 @@ class PemakamanController extends Controller
                         <div class="dropdown-menu">
                     ';
 
-                    $btn .= '
+                $btn .= '
                     <a href="'. route('makam.edit', ['id' => $row->id]) .'" class="dropdown-item" data-toggle="tooltip" title="Edit">
                         <i class="fa-regular fa-pen-to-square"></i>
                         Edit
@@ -58,9 +67,11 @@ class PemakamanController extends Controller
             ->toJson();
     }
 
+
     public function index()
     {
-        return view('pages.pemakaman.manage');
+        $blok = \App\Models\BlokPemakaman::get();
+        return view('pages.pemakaman.manage', compact('blok'));
     }
 
     public function create()

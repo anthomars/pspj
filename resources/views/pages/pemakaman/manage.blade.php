@@ -36,25 +36,51 @@
 <div class="page-body">
   <div class="container-xl">
     <div class="card p-3">
-      <div class="table-responsive">
-        <table id="data-datatable" class="table card-table table-vcenter text-nowrap">
-          <thead>
-            <tr>
-              <th>No.</th>
-              <th>Blok</th>
-              <th>Tgl Pemakaman</th>
-              <th>Jam Pemakaman</th>
-              <th>Status Pemakaman</th>
-              <th>Biaya</th>
-              <th>Nominal</th>
-              <th>Status Bayar</th>
-              <th>Opsi</th>
-            </tr>
-          </thead>
-          <tbody>
-
-          </tbody>
-        </table>
+      <div class="card-header mb-2">
+        <form id="searchForm">
+          @csrf
+          <div class="d-flex">
+              <div class="mb-3 me-3">
+                <label for="blok_pemakaman_id">Filter by Blok</label>
+                <select name="blok_pemakaman_id" id="blok_pemakaman_id" class="form-select">
+                    <option value="" hidden>--Pilih--</option>
+                    @foreach ($blok as $blk)
+                        <option value="{{ $blk->id_blok_pemakaman }}">{{ $blk->nama_blok_pemakaman }}</option>
+                    @endforeach
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="status_bayar">Filter by Status Bayar</label>
+                <select name="status_bayar" id="status_bayar" class="form-select">
+                    <option value="" hidden>--Pilih--</option>
+                    <option value="belum lunas" class="text-danger">Belum Lunas</option>
+                    <option value="lunas">Lunas</option>
+                </select>
+              </div>
+            </div>
+            </form>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table id="data-datatable" class="table card-table table-vcenter text-nowrap">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Blok</th>
+                <th>Tgl Pemakaman</th>
+                <th>Jam Pemakaman</th>
+                <th>Status Pemakaman</th>
+                <th>Biaya</th>
+                <th>Nominal</th>
+                <th>Status Bayar</th>
+                <th>Opsi</th>
+              </tr>
+            </thead>
+            <tbody>
+  
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -75,14 +101,20 @@
   
   <script>
     $(function() {
-      $.fn.dataTable.moment( 'DD/MM/YYYY' );
+      $.fn.dataTable.moment('DD/MM/YYYY');
 
-      $('#data-datatable').DataTable({
+      var table = $('#data-datatable').DataTable({
         processing: true,
         serverSide: true,
-        'bAutoWidth':false,
-        ajax: '{!! route('makam.dataTable') !!}', // memanggil route yang menampilkan data json
-        columns: [ // mengambil & menampilkan kolom sesuai tabel database
+        'bAutoWidth': false,
+        ajax: {
+          url: '{!! route('makam.dataTable') !!}',
+          data: function(d) {
+            d.blok_pemakaman_id = $('#blok_pemakaman_id').val();
+            d.status_bayar = $('#status_bayar').val();
+          }
+        },
+        columns: [
           { "data" : "id", "render": function (data, type, row, meta) {
               return meta.row + meta.settings._iDisplayStart + 1;
           }, width: '50px'  },
@@ -97,9 +129,7 @@
              render: function(data, type, row){
                 var nominal = "Rp. " + new Intl.NumberFormat('id-ID').format(data);
                 return '<span>' + nominal + '</span>';
-                
              }
-
           },
           {
               data: 'status_bayar',
@@ -116,6 +146,10 @@
         },
       });
 
+      $('#blok_pemakaman_id, #status_bayar').change(function() {
+        table.draw();
+      });
+
       $('input[type=search]').on('input', function(e) {
         if('' == this.value) {
           const cek = "{{ Request::get('search') }}";
@@ -125,9 +159,7 @@
         }
       });
     });
-  </script>
 
-  <script>
     function deleteData(id) {
         Swal.fire({
               title: 'Konfirmasi',
