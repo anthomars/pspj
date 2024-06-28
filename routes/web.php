@@ -107,7 +107,6 @@ Route::middleware('auth.user')->group(function () {
             Route::get('detail/{iuran}', 'show')->name('iuran.detail');
             Route::delete('{iuran}', 'destroy')->name('iuran.destroy');
             Route::get('/cronjob_manually', 'runCronJob')->name('iuran.cronjob_manually');
-
         });
     
         //Pembayaran

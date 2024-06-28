@@ -84,7 +84,6 @@
         $('#iuranForm').on('submit', function(e) {
             e.preventDefault();
 
-            // Clear previous errors and remove is-invalid class
             $('.form-control').removeClass('is-invalid');
             $('.invalid-feedback').text('');
 

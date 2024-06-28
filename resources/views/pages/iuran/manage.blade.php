@@ -17,8 +17,12 @@
             <div class="btn-list">
               @if(Auth::user()->role_id != 5)
               <a href="#" id="cronjob_btn" class="btn btn-primary d-none d-sm-inline-block">
-                    <i class="fa-solid fa-arrows-rotate"></i>
-                  Generate Iuran Berulang
+                  <span id="cronjob_btn_text">
+                    <i class="fa-solid fa-arrows-rotate"></i>Generate Iuran Berulang
+                  </span>
+                  <span id="cronjob_loading" style="display:none;">
+                    <i class="fas fa-spinner fa-spin"></i> Sedangg diproses...
+                </span>
               </a>
 
               <a href="{{ route('iuran.create') }}" class="btn btn-primary d-none d-sm-inline-block">
@@ -301,11 +305,15 @@
       });
 
       function runCronJob() {
+            $("#cronjob_btn_text").hide();
+            $("#cronjob_loading").show();
+            $("#cronjob_btn").attr("disabled", true);
+
           $.ajax({
-              url: '{{ route("iuran.cronjob_manually") }}', // Ubah dengan route yang sesuai
+              url: '{{ route("iuran.cronjob_manually") }}',
               type: 'GET',
               data: {
-                  _token: '{{ csrf_token() }}' // Sertakan token CSRF
+                  _token: '{{ csrf_token() }}' 
               },
               success: function(response) {
                   if(response.status === 'success') {
@@ -340,7 +348,12 @@
               },
               error: function(xhr, status, error) {
                   alert('Error: ' + error);
-              }
+              },
+              complete: function() {
+                    $("#cronjob_loading").hide();
+                    $("#cronjob_btn_text").show();
+                    $("#cronjob_btn").attr("disabled", false);
+                }
           });
       }
   });

@@ -203,13 +203,17 @@ class IuranController extends Controller
                     })
                     ->get();
                 foreach($lastIuran as $iuran){
-                    \App\Models\Iuran::create([
+                   $newIuran = \App\Models\Iuran::create([
                         'nama_iuran'        => $iuran->nama_iuran,
                         'nominal_iuran'     => $iuran->nominal_iuran,
                         'date_created'      => $today,
                         'user_id'           => $iuran->user_id,
                         'jenazah_id'        => $iuran->jenazah_id,
                     ]);
+
+                if($newIuran){
+                     $this->sendWA($iuran->user_id);
+                }
             }
         }
 
@@ -217,6 +221,42 @@ class IuranController extends Controller
             'status' => 'error',
             'message' => 'Hari ini bukan tanggal 01.'
         ]);
+    }
+
+    private function sendWA($user_id)
+    {
+        //Ambil data user
+        $user = \App\Models\User::where('id', $user_id)->first();
+
+        $message = "Yth. *$user->nama_lengkap* iuran terbaru Anda sudah terbit. Silahkan masuk ke dashboard sistem Anda untuk melakukan pembayaran. Terima kasih.";
+
+        $data = [
+            'api_key' => '', //isikan API KEY
+            'sender' => '', // isikan NO PENGIRIM
+            'number' => '', // isikan NO TUJUAN
+            'message' => $message
+        ];
+        $curl = curl_init();
+        
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => '', //isikan URL GATEWAY
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS => http_build_query($data),
+          CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/x-www-form-urlencoded'
+          ),
+        ));
+        
+        $response = curl_exec($curl);
+        
+        curl_close($curl);
+        // dd($response);
     }
 
 }
