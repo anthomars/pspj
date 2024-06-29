@@ -239,7 +239,7 @@ class IuranController extends Controller
         $curl = curl_init();
         
         curl_setopt_array($curl, array(
-          CURLOPT_URL => '', //isikan URL GATEWAY
+          CURLOPT_URL => 'http://wa.ifibernet.id/gateway/api/message', //isikan URL GATEWAY
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => '',
           CURLOPT_MAXREDIRS => 10,
