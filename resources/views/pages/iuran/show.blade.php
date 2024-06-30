@@ -63,6 +63,7 @@
                     </div>
                 </div>
             </div>
+
             @if($iuran->status_bayar == 'belum lunas')
                 <div class="col-md-4">
                     <div class="accordion accordion-flush" id="accordionFlushExample">
@@ -109,33 +110,33 @@
                 </div>
             @endif
 
-            @if($iuran->status_bayar == 'lunas' || $iuran->status_bayar == 'menunggu konfirmasi')
-                <div class="col-md-4">
-                    <div class="accordion accordion-flush" id="accordionFlushExample">
-                        <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                            Lampiran Pembayaran
-                            </button>
-                        </h2>
-                        <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                            <div class="accordion-body">
-                                <form id="updatePembayaranForm" enctype="multipart/form-data">
-                                @csrf
-                                    <input type="hidden" value="{{ $iuran->id_iuran }}" name="iuran_id">
-                                    <img src="{{ asset('uploads/images/' . $pembayaran->bukti_bayar) }}" alt="bukti bayar" class="mb-4">
-                                    @if(Auth::user()->role_id != 5 && $iuran->status_bayar != 'lunas')
-                                    <button type="submit" class="btn btn-success">Tandai Sebagai Lunas</button>
-                                    @endif
-                                </form>
+            @if (Auth::user()->role_id === 1)
+                @if($iuran->status_bayar == 'lunas' || $iuran->status_bayar == 'menunggu konfirmasi')
+                    <div class="col-md-4">
+                        <div class="accordion accordion-flush" id="accordionFlushExample">
+                            <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                Lampiran Pembayaran
+                                </button>
+                            </h2>
+                            <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <form id="updatePembayaranForm" enctype="multipart/form-data">
+                                    @csrf
+                                        <input type="hidden" value="{{ $iuran->id_iuran }}" name="iuran_id">
+                                        <img src="{{ asset('uploads/images/' . $pembayaran->bukti_bayar) }}" alt="bukti bayar" class="mb-4">
+                                        @if(Auth::user()->role_id != 5 && $iuran->status_bayar != 'lunas')
+                                        <button type="submit" class="btn btn-success">Tandai Sebagai Lunas</button>
+                                        @endif
+                                    </form>
+                                </div>
+                            </div>
                             </div>
                         </div>
-                        </div>
                     </div>
-                </div>
+                @endif
             @endif
-
-            
 
         </div>
     </div>

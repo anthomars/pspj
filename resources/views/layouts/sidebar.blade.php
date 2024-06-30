@@ -175,32 +175,43 @@
                 </span>
             </a>
             <div class="dropdown-menu {{ Request::is('user-account') ? 'show' : '' }} {{ Request::is('master-data/rw') ? 'show' : '' }} {{ Request::is('master-data/rt') ? 'show' : '' }} {{ Request::is('master-data/blok') ? 'show' : '' }}">
-                <a class="dropdown-item {{ Request::is('master-data/rw') ? 'active' : '' }}" href="{{ url('master-data/rw') }}" rel="noopener">
-                    RW
-                </a>
-                <a class="dropdown-item {{ Request::is('master-data/rt') ? 'active' : '' }}" href="{{ url('master-data/rt') }}" rel="noopener">
-                    RT
-                </a>
-                <a class="dropdown-item {{ Request::is('user-account') ? 'active' : '' }}" href="{{ url('user-account') }}" rel="noopener">
-                    Pengguna
-                </a>
-                <a class="dropdown-item {{ Request::is('master-data/blok') ? 'active' : '' }}" href="{{ url('master-data/blok') }}" rel="noopener">
-                    Blok Pemakaman
-                </a>
+                @if (Auth::user()->role_id === 1)
+                    <a class="dropdown-item {{ Request::is('master-data/rw') ? 'active' : '' }}" href="{{ url('master-data/rw') }}" rel="noopener">
+                        RW
+                    </a>
+                @endif
+
+                @if (in_array(Auth::user()->role_id, [1,2,3]))
+                    <a class="dropdown-item {{ Request::is('master-data/rt') ? 'active' : '' }}" href="{{ url('master-data/rt') }}" rel="noopener">
+                        RT
+                    </a>
+                @endif
+                @if (Auth::user()->role_id === 1)
+                    <a class="dropdown-item {{ Request::is('user-account') ? 'active' : '' }}" href="{{ url('user-account') }}" rel="noopener">
+                        Pengguna
+                    </a>
+                @endif
+                @if (Auth::user()->role_id === 4)
+                    <a class="dropdown-item {{ Request::is('master-data/blok') ? 'active' : '' }}" href="{{ url('master-data/blok') }}" rel="noopener">
+                        Blok Pemakaman
+                    </a>
+                @endif
 
             </div>
           </li>
 
-          <li class="nav-item {{ Request::is('jenazah*') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ url('jenazah') }}">
-                <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
-                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-user-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" /></svg>
-                </span>
-                <span class="nav-link-title">
-                    Jenazah
-                </span>
-            </a>
-          </li>
+          @if (Auth::user()->role_id === 4)
+            <li class="nav-item {{ Request::is('jenazah*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ url('jenazah') }}">
+                    <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-user-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" /></svg>
+                    </span>
+                    <span class="nav-link-title">
+                        Jenazah
+                    </span>
+                </a>
+            </li>
+          @endif
 
           <li class="nav-item {{ request()->is('makam') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('makam.index') }}">
