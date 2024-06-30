@@ -6,10 +6,13 @@ use App\Http\Controllers\RwController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\IuranController;
+use App\Http\Controllers\JenazahController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PemakamanController;
+use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\BlokPemakamanController;
-use App\Http\Controllers\JenazahController;
 
 /*
 |--------------------------------------------------------------------------
@@ -99,7 +102,7 @@ Route::middleware('auth.user')->group(function () {
     Route::prefix('iuran')->group(function(){
 
         //Iuran
-        Route::controller(\App\Http\Controllers\IuranController::class)->group(function(){
+        Route::controller(IuranController::class)->group(function(){
             Route::get('/', 'index')->name('iuran.index');
             Route::get('create', 'create')->name('iuran.create');
             Route::post('create', 'store')->name('iuran.store');
@@ -108,9 +111,9 @@ Route::middleware('auth.user')->group(function () {
             Route::delete('{iuran}', 'destroy')->name('iuran.destroy');
             Route::get('/cronjob_manually', 'runCronJob')->name('iuran.cronjob_manually');
         });
-    
+
         //Pembayaran
-        Route::controller(\App\Http\Controllers\PembayaranController::class)->group(function(){
+        Route::controller(PembayaranController::class)->group(function(){
             Route::get('get_data', 'getData')->name('pembayaran.dataTable');
             Route::get('data_pembayaran', 'index')->name('pembayaran.index');
             Route::post('pembayaran', 'store')->name('pembayaran.store');
@@ -119,7 +122,7 @@ Route::middleware('auth.user')->group(function () {
     });
 
      //Pemakaman
-     Route::controller(\App\Http\Controllers\PemakamanController::class)->group(function(){
+     Route::controller(PemakamanController::class)->group(function(){
         Route::get('makam/get_data', 'data')->name('makam.dataTable');
         Route::get('makam', 'index')->name('makam.index');
         Route::get('makam/create', 'create')->name('makam.create');
