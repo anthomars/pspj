@@ -197,15 +197,16 @@ class IuranController extends Controller
     private function copyLastInvoices()
     {
         // Dapatkan tanggal 01 bulan ini
-        $today = Carbon::today();
+        $today = Carbon::now('Asia/Jakarta');;
         $firstDayOfMonth = $today->firstOfMonth();
 
             if ($today->eq($firstDayOfMonth)) {
                 $lastIuran = Iuran::select('tbl_iuran.*')
-                    ->join(DB::raw('(SELECT MAX(id_iuran) as max_id FROM tbl_iuran GROUP BY user_id) as grouped_iurans'), function ($join) {
+                    ->join(DB::raw('(SELECT MAX(id_iuran) as max_id FROM tbl_iuran GROUP BY jenazah_id) as grouped_iurans'), function ($join) {
                         $join->on('tbl_iuran.id_iuran', '=', 'grouped_iurans.max_id');
                     })
                     ->get();
+                // dd($lastIuran);
                 foreach($lastIuran as $iuran){
                    $newIuran = Iuran::create([
                         'nama_iuran'        => $iuran->nama_iuran,
@@ -215,11 +216,11 @@ class IuranController extends Controller
                         'jenazah_id'        => $iuran->jenazah_id,
                     ]);
 
-                if($newIuran){
-                     $this->sendWA($iuran->user_id, $iuran->user->no_hp);
+                    if($newIuran){
+                        $this->sendWA($iuran->user_id, $iuran->user->no_hp);
+                    }
                 }
             }
-        }
 
         return response()->json([
             'status' => 'error',
