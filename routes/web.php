@@ -134,5 +134,6 @@ Route::middleware('auth.user')->group(function () {
     });
 
     // Laporan
-    Route::get('laporan', [LaporanController::class, 'index']);
+    Route::get('laporan/iuran-bulanan', [LaporanController::class, 'iuran_bulanan']);
+    Route::get('laporan/biaya-pemakaman', [LaporanController::class, 'biaya_pemakaman']);
 });
