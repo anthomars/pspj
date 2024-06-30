@@ -1,4 +1,5 @@
 <!-- Tabler Core -->
+<script src="{{ asset('templates/tabler/dist/libs/fslightbox/index.js?1695847769') }}" defer></script>
 <script src="{{ asset('templates/tabler/dist/js/tabler.min.js?1685976846') }}" defer></script>
 <script src="{{ asset('templates/tabler/dist/js/demo.min.js?1685976846') }}" defer></script>
 <script src="{{ asset('templates/tabler/dist/js/demo-theme.min.js?1685976846') }}" defer></script>

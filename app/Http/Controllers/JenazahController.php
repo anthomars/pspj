@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jenazah;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use PhpParser\Node\Stmt\Return_;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
@@ -25,6 +27,14 @@ class JenazahController extends Controller
         $data = Jenazah::orderBy('id_jenazah','ASC');
 
         return DataTables::of($data)->addIndexColumn()
+            ->addColumn('alamat', function($row) {
+                $alamat = '
+                    <span class="text-secondary">
+                    ' . Str::limit(strip_tags($row->alamat), 10, '<span class="readMore" data-id="'.$row->id_jenazah.'" data-alamat="'.$row->alamat.'" onclick="readMore(this)" style="color:blue; cursor: pointer;"> ... <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevrons-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7l5 5l-5 5" /><path d="M13 7l5 5l-5 5" /></svg></span>') . '
+                    </span>
+                ';
+                return $alamat;
+            })
             ->addColumn('action', function($row){
 
                 $btn = '
@@ -72,6 +82,9 @@ class JenazahController extends Controller
                     </div>
                     ';
                 return $btn;
+            })
+            ->filterColumn('alamat', function ($query, $keyword) {
+                $query->where('alamat', 'like', "%{$keyword}%");
             })
             ->rawColumns(['action'])
             ->escapeColumns([])
