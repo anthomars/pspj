@@ -15,12 +15,11 @@
           <div class="col-auto ms-auto d-print-none">
               <div class="btn-list">
                 @if(Auth::user()->role_id != 5)
-
-                <a href="{{ route('makam.index') }}" class="btn btn-primary d-none d-sm-inline-block">
-                    <i class="fa-solid fa-list"></i>
-                  List Data
-              </a>
-              @endif
+                    <a href="{{ route('makam.index') }}" class="btn btn-primary d-none d-sm-inline-block">
+                        <i class="fa-solid fa-list"></i>
+                    List Data
+                    </a>
+                @endif
               </div>
           </div>
       </div>
