@@ -10,9 +10,17 @@ class BlokPemakamanController extends Controller
 {
     public function data()
     {
-        $data = BlokPemakaman::orderBy('id_blok_pemakaman','desc');
+        $data = BlokPemakaman::with('pemakaman')->orderBy('id_blok_pemakaman','desc');
 
         return DataTables::of($data)->addIndexColumn()
+            ->addColumn('kapasitas', function($row) {
+                $quota = number_format($row->kapasitas);
+                $used = number_format(count($row->pemakaman));
+                $left = $quota - $used ;
+
+                $text = $left.' / '.$quota;
+                return  $text;
+            })
             ->addColumn('action', function($row){
                 $btn = '
                     <div class="dropdown">

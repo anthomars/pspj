@@ -20,6 +20,6 @@ class BlokPemakaman extends Model
 
     public function pemakaman()
     {
-        return $this->hasMany(Pemakaman::class, 'id_blok_pemakaman', 'blok_pemakaman_id');
+        return $this->hasMany(Pemakaman::class, 'blok_pemakaman_id', 'id_blok_pemakaman');
     }
 }

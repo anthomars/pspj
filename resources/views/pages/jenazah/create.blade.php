@@ -93,9 +93,14 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label">Keluarga</label>
-                                <input type="text" id="keluarga" name="keluarga" class="form-control @error('keluarga') is-invalid @enderror" placeholder="Title" value="{{ old('keluarga') }}"/>
-                                @error('keluarga')
+                                <label class="form-label" for="user_id">Keluarga</label>
+                                <select name="user_id" id="user_id" class="form-select @error('user_id') is-invalid @enderror">
+                                    <option value=""></option>
+                                    @foreach ($warga as $keluarga)
+                                        <option value="{{ $keluarga->id }}">{{ $keluarga->nama_lengkap }}</option>
+                                    @endforeach
+                                </select>
+                                @error('user_id')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -139,11 +144,19 @@
 </div>
 @endsection
 @push('css')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <style>
+        .select2-container--bootstrap-5.select2-container--disabled .select2-selection {
+            background-color: #f6f8fb;
+        }
+    </style>
     <link href="{{ asset('dist/css/custom-loading.css') }}" rel="stylesheet"/>
 @endpush
 @push('js')
     <script src="{{ asset('templates/tabler/dist/libs/tom-select/dist/js/tom-select.base.min.js?1692305289') }}" defer></script>
     <script src="{{ asset('templates/tabler/dist/libs/litepicker/dist/litepicker.js?1692870762') }}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script type="text/javascript">
         function splashLoading(){
             document.getElementById('submit').style.display = 'none';
@@ -152,6 +165,15 @@
             $('.overlay_submit_loading').addClass('show_loading');
             $('.spanner_submit_loading').addClass('show_loading');
         }
+    </script>
+    <script>
+        $('#user_id').select2({
+            theme: "bootstrap-5",
+            dropdownParent: $('#user_id').parent(),
+            placeholder: $(this).data('placeholder'),
+            // closeOnSelect: false,
+            tags: true,
+        });
     </script>
     <script>
         // @formatter:off

@@ -20,7 +20,6 @@ return new class extends Migration
             $table->date('tgl_wafat');
             $table->string('tempat_wafat');
             $table->string('alamat');
-            $table->string('keluarga')->nullable();
             $table->string('author_create')->nullable();
             $table->string('author_update')->nullable();
             $table->foreignId('user_id');

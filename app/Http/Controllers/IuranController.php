@@ -216,7 +216,7 @@ class IuranController extends Controller
                     ]);
 
                 if($newIuran){
-                     $this->sendWA($iuran->user_id);
+                     $this->sendWA($iuran->user_id, $iuran->user->no_hp);
                 }
             }
         }
@@ -227,7 +227,7 @@ class IuranController extends Controller
         ]);
     }
 
-    private function sendWA($user_id)
+    private function sendWA($user_id, $no_hp)
     {
         //Ambil data user
         $user = User::where('id', $user_id)->first();
@@ -237,7 +237,7 @@ class IuranController extends Controller
         $data = [
             'api_key' => '', //isikan API KEY
             'sender' => '', // isikan NO PENGIRIM
-            'number' => '', // isikan NO TUJUAN
+            'number' => $no_hp, // isikan NO TUJUAN
             'message' => $message
         ];
         $curl = curl_init();

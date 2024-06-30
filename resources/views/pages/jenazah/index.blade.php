@@ -45,7 +45,7 @@
                                 <th>Tempat Wafat</th>
                                 <th>NIK</th>
                                 <th>Alamat</th>
-                                <th>Keluarga Dari</th>
+                                <th>Keluarga</th>
                                 <th>Created By</th>
                                 <th>Updated By</th>
                                 <th></th>
@@ -114,7 +114,7 @@
               { data: 'tempat_wafat', name: 'tempat_wafat' },
               { data: 'nik', name: 'nik' },
               { data: 'alamat', name: 'alamat' },
-              { data: 'keluarga', name: 'keluarga' },
+              { data: 'user.nama_lengkap', name: 'user.nama_lengkap' },
               { data: 'author_create', name: 'author_create' },
               { data: 'author_update', name: 'author_update' },
               { data: 'action', name: 'action', orderable: false, searchable: false, width: '20px'},

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Jenazah;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class JenazahController extends Controller
 {
 
     public function data() {
-        $data = Jenazah::orderBy('id_jenazah','ASC');
+        $data = Jenazah::with('user')->orderBy('id_jenazah','ASC');
 
         return DataTables::of($data)->addIndexColumn()
             ->addColumn('alamat', function($row) {
@@ -88,7 +89,8 @@ class JenazahController extends Controller
 
     public function create()
     {
-        return view('pages.jenazah.create');
+        $warga = User::where('role_id', 5)->get();
+        return view('pages.jenazah.create', compact('warga'));
     }
 
     public function store(Request $request)
@@ -101,7 +103,7 @@ class JenazahController extends Controller
             'tempat_wafat'  => 'required',
             'nik'  => 'required',
             'alamat'  => 'required',
-            'keluarga'  => 'required',
+            'user_id'  => 'required',
         ];
         $message = [
             'nama_jenazah.required' => 'Nama jenazah harus di isi.',
@@ -111,13 +113,12 @@ class JenazahController extends Controller
             'tanggal_wafat.required' => 'Tanggal wafat harus di isi.',
             'nik.required' => 'NIK harus di isi.',
             'alamat.required' => 'Alamat harus di isi.',
-            'keluarga.required' => 'Keluarga harus di isi.',
+            'user_id.required' => 'Keluarga harus di isi.',
         ];
         $validatedData = $request->validate($rules, $message);
 
         $validatedData['author_create'] = Auth::user()->username;
         $validatedData['author_update'] = Auth::user()->username;
-        $validatedData['user_id'] = Auth::user()->id;
 
         $jenazah = Jenazah::create($validatedData);
 
@@ -132,10 +133,10 @@ class JenazahController extends Controller
 
     public function edit(Request $request)
     {
-        // dd($request->segment(2));
+        $warga = User::where('role_id', 5)->get();
         $jenazah = Jenazah::where('id_jenazah', $request->segment(2))->get();
         // dd($jenazah);
-        return view('pages.jenazah.edit', compact('jenazah'));
+        return view('pages.jenazah.edit', compact('jenazah', 'warga'));
     }
 
     public function update(Request $request)
@@ -174,9 +175,9 @@ class JenazahController extends Controller
             $rules['alamat'] = 'required';
             $message['alamat.required'] = 'Harus di isi.';
         }
-        if ($jenazah[0]->keluarga != $request->keluarga) {
-            $rules['keluarga'] = 'required';
-            $message['keluarga.required'] = 'Harus di isi.';
+        if ($jenazah[0]->user_id != $request->user_id) {
+            $rules['user_id'] = 'required';
+            $message['user_id.required'] = 'Harus di isi.';
         }
 
         $validatedData = $request->validate($rules, $message);
