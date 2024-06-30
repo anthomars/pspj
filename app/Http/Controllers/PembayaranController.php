@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Iuran;
+use App\Models\Pembayaran;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class PembayaranController extends Controller
 {
@@ -12,11 +14,11 @@ class PembayaranController extends Controller
     {
         $currentUser = auth()->user()->id;
         if(auth()->user()->role_id == 5){
-            $data = \App\Models\Pembayaran::whereHas('iuran', function ($query) use ($currentUser) {
+            $data = Pembayaran::whereHas('iuran', function ($query) use ($currentUser) {
                 $query->where('user_id', $currentUser);
             })->with('iuran')->latest();
         }else{
-            $data = \App\Models\Pembayaran::with('iuran')->latest();
+            $data = Pembayaran::with('iuran')->latest();
         }
 
         return DataTables::of($data)->addIndexColumn()
@@ -106,9 +108,9 @@ class PembayaranController extends Controller
             'bukti_bayar'       => $bukti_bayar,
         ];
 
-        $pembayaran = \App\Models\Pembayaran::create($postData);
+        $pembayaran = Pembayaran::create($postData);
         $statusBayar = 'menunggu konfirmasi';
-        $updateStatusIuran = \App\Models\Iuran::where('id_iuran', $iuran_id)->update(array('status_bayar' => $statusBayar));
+        $updateStatusIuran = Iuran::where('id_iuran', $iuran_id)->update(array('status_bayar' => $statusBayar));
         return response()->json([
             'status' => 'success',
             'message' => 'Pembayaran berhasil disimpan',
@@ -121,7 +123,7 @@ class PembayaranController extends Controller
     {
         $id_iuran = $request->iuran_id;
         $statusBayar = 'lunas';
-        $updateStatusIuran = \App\Models\Iuran::where('id_iuran', $id_iuran)->update(array('status_bayar' => $statusBayar));
+        $updateStatusIuran = Iuran::where('id_iuran', $id_iuran)->update(array('status_bayar' => $statusBayar));
 
         return response()->json([
             'status' => 'success',
