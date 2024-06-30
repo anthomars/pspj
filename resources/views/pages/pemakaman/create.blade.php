@@ -15,7 +15,7 @@
           <div class="col-auto ms-auto d-print-none">
               <div class="btn-list">
                 @if(Auth::user()->role_id != 5)
-  
+
                 <a href="{{ route('makam.index') }}" class="btn btn-primary d-none d-sm-inline-block">
                     <i class="fa-solid fa-list"></i>
                   List Data
@@ -36,6 +36,17 @@
                         @csrf
                         <div class="card-body">
                             <div class="mb-3">
+                                <label for="jenazah_id">Nama Jenazah</label>
+                                <select name="jenazah_id" id="jenazah_id" class="form-select">
+                                    <option value="" hidden>--Pilih--</option>
+                                    @foreach ($jenazah as $item)
+                                        <option value="{{ $item->id_jenazah }}">{{ $item->nama_jenazah }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="invalid-feedback" id="blokError"></span>
+                            </div>
+
+                            <div class="mb-3">
                                 <label for="blok_pemakaman_id">Blok Pemakaman</label>
                                 <select name="blok_pemakaman_id" id="blok_pemakaman_id" class="form-select">
                                     <option value="" hidden>--Pilih--</option>
@@ -55,10 +66,15 @@
                                 </select>
                                 <span class="invalid-feedback" id="statusError"></span>
                             </div>
-                            
+
                             <div class="mb-3">
                                 <label for="tgl_pemakaman">Tanggal Pemakaman</label>
-                                <input type="date" class="form-control" name="tgl_pemakaman" id="tgl_pemakaman">
+                                <div class="input-icon mb-2">
+                                    <input class="form-control" name="tgl_pemakaman" id="tgl_pemakaman">
+                                    <span class="input-icon-addon"><!-- Download SVG icon from http://tabler-icons.io/i/calendar -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"></path><path d="M16 3v4"></path><path d="M8 3v4"></path><path d="M4 11h16"></path><path d="M11 15h1"></path><path d="M12 15v3"></path></svg>
+                                    </span>
+                                </div>
                                 <span class="invalid-feedback" id="tglError"></span>
                             </div>
 
@@ -90,7 +106,7 @@
                                 </select>
                                 <span class="invalid-feedback" id="statusBayarError"></span>
                             </div>
-                            
+
                         </div>
                         <div id="result" class="mt-3"></div>
                         <div class="card-footer">
@@ -107,6 +123,7 @@
 
 @push('js')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{{ asset('templates/tabler/dist/libs/litepicker/dist/litepicker.js?1692870762') }}" defer></script>
 <script>
     $(document).ready(function() {
         $('#makamForm').on('submit', function(e) {
@@ -117,7 +134,7 @@
             $('.invalid-feedback').text('');
 
             var formData = new FormData(this);
-            
+
             $.ajax({
                 url: "{{ route('makam.store') }}",
                 method: "POST",
@@ -182,6 +199,40 @@
                 }
             });
         });
+    });
+</script>
+
+<script>
+    // @formatter:off
+    document.addEventListener("DOMContentLoaded", function () {
+        var el;
+
+        // Get a date object for the current time
+        let afterDay = new Date();
+
+        // Set it to one month ago
+        afterDay.setDate(afterDay.getDate());
+
+        window.Litepicker && (new Litepicker({
+            element: document.getElementById('tgl_pemakaman'),
+            singleMode: true,
+            numberOfMonths: 1,
+            numberOfColumns: 1,
+            maxDate: afterDay,
+            resetButton: true,
+            buttonText: {
+                reset: `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M4 7l16 0"></path>
+                            <path d="M10 11l0 6"></path>
+                            <path d="M14 11l0 6"></path>
+                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                        </svg>`,
+                previousMonth: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>`,
+                nextMonth: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>`,
+            },
+        }));
     });
 </script>
 @endpush

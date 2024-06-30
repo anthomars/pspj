@@ -10,7 +10,7 @@
       <div class="col">
         <!-- Page pre-title -->
         <div class="page-pretitle">Pemakaman</div>
-        <h2 class="page-title">Semua Data Pemakaman</h2>
+        <h2 class="page-title">Data Pemakaman</h2>
       </div>
       <!-- Page title actions -->
         <div class="col-auto ms-auto d-print-none">
@@ -66,6 +66,7 @@
             <thead>
               <tr>
                 <th>No.</th>
+                <th>Nama Jenazah</th>
                 <th>Blok</th>
                 <th>Tgl Pemakaman</th>
                 <th>Jam Pemakaman</th>
@@ -77,7 +78,7 @@
               </tr>
             </thead>
             <tbody>
-  
+
             </tbody>
           </table>
         </div>
@@ -98,7 +99,7 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
   <script src="//cdn.datatables.net/plug-ins/1.10.12/sorting/datetime-moment.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-  
+
   <script>
     $(function() {
       $.fn.dataTable.moment('DD/MM/YYYY');
@@ -118,13 +119,14 @@
           { "data" : "id", "render": function (data, type, row, meta) {
               return meta.row + meta.settings._iDisplayStart + 1;
           }, width: '50px'  },
+          { data: 'nama_jenazah', name: 'nama_jenazah' },
           { data: 'nama_blok', name: 'nama_blok' },
           { data: 'tgl_pemakaman', name: 'tgl_pemakaman' },
           { data: 'jam_pemakaman', name: 'jam_pemakaman' },
           { data: 'status_pemakaman', name: 'status_pemakaman' },
           { data: 'nama_biaya', name: 'nama_biaya' },
           {
-             data: 'nominal_biaya', 
+             data: 'nominal_biaya',
              name: 'nominal_biaya',
              render: function(data, type, row){
                 var nominal = "Rp. " + new Intl.NumberFormat('id-ID').format(data);
@@ -138,7 +140,7 @@
                 var statusClass = data === 'lunas' ? 'text-success' : 'text-danger';
                 return '<span class="text-capitalize ' + statusClass + '">' + data + '</span>';
             }
-          },  
+          },
           { data: 'action', name: 'action', orderable: false, searchable: false, width: '20px'},
         ],
         "search": {

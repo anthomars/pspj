@@ -9,13 +9,13 @@
         <div class="col">
           <!-- Page pre-title -->
           <div class="page-pretitle">Pemakaman</div>
-          <h2 class="page-title">Tambah Data Pemakaman</h2>
+          <h2 class="page-title">Edit Data Pemakaman</h2>
         </div>
         <!-- Page title actions -->
           <div class="col-auto ms-auto d-print-none">
               <div class="btn-list">
                 @if(Auth::user()->role_id != 5)
-  
+
                 <a href="{{ route('makam.index') }}" class="btn btn-primary d-none d-sm-inline-block">
                     <i class="fa-solid fa-list"></i>
                   List Data
@@ -37,11 +37,22 @@
                         @method('PUT')
                         <div class="card-body">
                             <div class="mb-3">
+                                <label for="jenazah_id">Nama Jenazah</label>
+                                <select name="jenazah_id" id="jenazah_id" class="form-select">
+                                    <option value="" hidden>--Pilih--</option>
+                                    @foreach ($jenazah as $item)
+                                        <option value="{{ $item->id_jenazah }}" {{ $makam->jenazah->id_jenazah == $item->id_jenazah ? 'selected' : '' }}>{{ $item->nama_jenazah }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="invalid-feedback" id="blokError"></span>
+                            </div>
+
+                            <div class="mb-3">
                                 <label for="blok_pemakaman_id">Blok Pemakaman</label>
                                 <select name="blok_pemakaman_id" id="blok_pemakaman_id" class="form-select">
                                     <option value="" hidden>--Pilih--</option>
                                     @foreach ($blok as $blk)
-                                        <option value="{{ $blk->id_blok_pemakaman }}">{{ $blk->nama_blok_pemakaman }}</option>
+                                        <option value="{{ $blk->id_blok_pemakaman }}" {{ $makam->blok->id_blok_pemakaman == $blk->id_blok_pemakaman ? 'selected' : '' }}>{{ $blk->nama_blok_pemakaman }}</option>
                                     @endforeach
                                 </select>
                                 <span class="invalid-feedback" id="blokError"></span>
@@ -51,15 +62,20 @@
                                 <label for="status_pemakaman">Status Pemakaman</label>
                                 <select name="status_pemakaman" id="status_pemakaman" class="form-select">
                                     <option value="" hidden>--Pilih--</option>
-                                    <option value="belum dimakamkan">Belum Dimakamkan</option>
-                                    <option value="sudah dimakamkan">Sudah Dimakamkan</option>
+                                    <option value="belum dimakamkan" {{ $makam->status_pemakaman == 'belum dimakamkan' ? 'selected' : ''}}>Belum Dimakamkan</option>
+                                    <option value="sudah dimakamkan" {{ $makam->status_pemakaman == 'sudah dimakamkan' ? 'selected' : ''}}>Sudah Dimakamkan</option>
                                 </select>
                                 <span class="invalid-feedback" id="statusError"></span>
                             </div>
-                            
+
                             <div class="mb-3">
                                 <label for="tgl_pemakaman">Tanggal Pemakaman</label>
-                                <input type="date" class="form-control" name="tgl_pemakaman" id="tgl_pemakaman">
+                                <div class="input-icon mb-2">
+                                    <input class="form-control" name="tgl_pemakaman" id="tgl_pemakaman" value="{{ date('Y-m-d',strtotime($makam->tgl_pemakaman)) }}">
+                                    <span class="input-icon-addon"><!-- Download SVG icon from http://tabler-icons.io/i/calendar -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"></path><path d="M16 3v4"></path><path d="M8 3v4"></path><path d="M4 11h16"></path><path d="M11 15h1"></path><path d="M12 15v3"></path></svg>
+                                    </span>
+                                </div>
                                 <span class="invalid-feedback" id="tglError"></span>
                             </div>
 
@@ -86,12 +102,12 @@
                                 <label for="status_bayar">Status Bayar</label>
                                 <select name="status_bayar" id="status_bayar" class="form-select">
                                     <option value="" hidden>--Pilih--</option>
-                                    <option value="belum lunas">Belum Lunas</option>
-                                    <option value="lunas">Lunas</option>
+                                    <option value="belum lunas" {{ $makam->status_bayar == 'belum lunas' ? 'selected' : ''}}>Belum Lunas</option>
+                                    <option value="lunas" {{ $makam->status_bayar == 'lunas' ? 'selected' : ''}}>Lunas</option>
                                 </select>
                                 <span class="invalid-feedback" id="statusBayarError"></span>
                             </div>
-                            
+
                         </div>
                         <div id="result" class="mt-3"></div>
                         <div class="card-footer">
@@ -118,7 +134,7 @@
             $('.invalid-feedback').text('');
 
             var formData = new FormData(this);
-            
+
             $.ajax({
                 url: "{{ route('makam.update', $makam->id) }}",
                 method: "POST",

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pemakaman;
 use Illuminate\Http\Request;
+use App\Models\BlokPemakaman;
+use App\Models\Jenazah;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
@@ -10,7 +13,7 @@ class PemakamanController extends Controller
 {
     public function data(Request $request)
     {
-        $data = \App\Models\Pemakaman::with(['blok'])
+        $data = Pemakaman::with(['blok'])
             ->orderBy('date_created', 'desc');
 
         if ($request->has('status_bayar') && !empty($request->status_bayar)) {
@@ -22,6 +25,9 @@ class PemakamanController extends Controller
         }
 
         return DataTables::of($data)->addIndexColumn()
+            ->addColumn('nama_jenazah', function($row) {
+                return $row->jenazah->nama_jenazah;
+            })
             ->addColumn('nama_blok', function($row) {
                 return $row->blok->nama_blok_pemakaman;
             })
@@ -70,19 +76,21 @@ class PemakamanController extends Controller
 
     public function index()
     {
-        $blok = \App\Models\BlokPemakaman::get();
+        $blok = BlokPemakaman::get();
         return view('pages.pemakaman.manage', compact('blok'));
     }
 
     public function create()
     {
-        $blok = \App\Models\BlokPemakaman::get();
-        return view('pages.pemakaman.create', compact('blok'));
+        $jenazah = Jenazah::all();
+        $blok = BlokPemakaman::all();
+        return view('pages.pemakaman.create', compact('blok', 'jenazah'));
     }
 
     public function store(Request $request)
     {
         $rules = [
+            'jenazah_id'     => 'required|numeric',
             'blok_pemakaman_id'     => 'required|numeric',
             'status_pemakaman'      => 'required',
            'tgl_pemakaman'          => 'required',
@@ -93,6 +101,7 @@ class PemakamanController extends Controller
         ];
 
         $messages = [
+            'jenazah_id.required'  => 'Pilih salah satu',
             'blok_pemakaman_id.required'  => 'Pilih salah satu',
             'status_pemakaman.required'  => 'Pilih salah satu',
             'tgl_pemakaman.required'    => 'Bidang ini wajib di isi',
@@ -117,6 +126,7 @@ class PemakamanController extends Controller
         $currentUser = auth()->user()->username;
 
         $postData = [
+            'jenazah_id' => $request->jenazah_id,
             'blok_pemakaman_id' => $request->blok_pemakaman_id,
             'status_pemakaman' => $request->status_pemakaman,
             'tgl_pemakaman' => $request->tgl_pemakaman,
@@ -129,7 +139,7 @@ class PemakamanController extends Controller
             'status_bayar'  => $request->status_bayar,
         ];
 
-        $iuran = \App\Models\Pemakaman::create($postData);
+        $iuran = Pemakaman::create($postData);
 
         return response()->json([
             'status' => 'success',
@@ -140,14 +150,16 @@ class PemakamanController extends Controller
 
     public function edit($id)
     {
-        $blok = \App\Models\BlokPemakaman::get();
-        $makam = \App\Models\Pemakaman::findOrFail($id);
-        return view('pages.pemakaman.edit', compact('blok', 'makam'));
+        $jenazah = Jenazah::all();
+        $blok = BlokPemakaman::all();
+        $makam = Pemakaman::findOrFail($id);
+        return view('pages.pemakaman.edit', compact('jenazah', 'blok', 'makam'));
     }
 
     public function update(Request $request, $id)
     {
         $rules = [
+            'jenazah_id'            => 'required|numeric',
             'blok_pemakaman_id'     => 'required|numeric',
             'status_pemakaman'      => 'required',
            'tgl_pemakaman'          => 'required',
@@ -158,6 +170,7 @@ class PemakamanController extends Controller
         ];
 
         $messages = [
+            'jenazah_id.required'  => 'Pilih salah satu',
             'blok_pemakaman_id.required'  => 'Pilih salah satu',
             'status_pemakaman.required'  => 'Pilih salah satu',
             'tgl_pemakaman.required'    => 'Bidang ini wajib di isi',
@@ -182,6 +195,7 @@ class PemakamanController extends Controller
         $currentUser = auth()->user()->username;
 
         $postData = [
+            'jenazah_id' => $request->jenazah_id,
             'blok_pemakaman_id' => $request->blok_pemakaman_id,
             'status_pemakaman' => $request->status_pemakaman,
             'tgl_pemakaman' => $request->tgl_pemakaman,
@@ -194,7 +208,7 @@ class PemakamanController extends Controller
             'status_bayar'  => $request->status_bayar,
         ];
 
-        $iuran = \App\Models\Pemakaman::findOrFail($id)->update($postData);
+        $iuran = Pemakaman::findOrFail($id)->update($postData);
 
         return response()->json([
             'status' => 'success',
@@ -206,7 +220,7 @@ class PemakamanController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $delete = \App\Models\Pemakaman::where('id', $id)->delete();
+        $delete = Pemakaman::where('id', $id)->delete();
 
         if($delete) {
             return response()->json([
