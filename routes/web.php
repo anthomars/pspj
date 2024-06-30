@@ -98,5 +98,38 @@ Route::middleware('auth.user')->group(function () {
     Route::get('jenazah/get_data', [JenazahController::class, 'getJenazah'])->name('jenazah.getJenazah');
     Route::resource('jenazah', JenazahController::class);
 
+     //Iuran & Pembayaran
+     Route::prefix('iuran')->group(function(){
+
+        //Iuran
+        Route::controller(IuranController::class)->group(function(){
+            Route::get('/', 'index')->name('iuran.index');
+            Route::get('create', 'create')->name('iuran.create');
+            Route::post('create', 'store')->name('iuran.store');
+            Route::get('data', 'data')->name('iuran.dataTable');
+            Route::get('detail/{iuran}', 'show')->name('iuran.detail');
+            Route::delete('{iuran}', 'destroy')->name('iuran.destroy');
+            Route::get('/cronjob_manually', 'runCronJob')->name('iuran.cronjob_manually');
+        });
+
+        //Pembayaran
+        Route::controller(PembayaranController::class)->group(function(){
+            Route::get('get_data', 'getData')->name('pembayaran.dataTable');
+            Route::get('data_pembayaran', 'index')->name('pembayaran.index');
+            Route::post('pembayaran', 'store')->name('pembayaran.store');
+            Route::post('pembayaran/confirm', 'confirmPayment')->name('pembayaran.confirm');
+        });
+    });
+
+     //Pemakaman
+     Route::controller(PemakamanController::class)->group(function(){
+        Route::get('makam/get_data', 'data')->name('makam.dataTable');
+        Route::get('makam', 'index')->name('makam.index');
+        Route::get('makam/create', 'create')->name('makam.create');
+        Route::post('makam/create', 'store')->name('makam.store');
+        Route::get('makam/edit/{id}', 'edit')->name('makam.edit');
+        Route::put('makam/edit/{id}', 'update')->name('makam.update');
+        Route::delete('makam/{id}', 'destroy')->name('makam.destroy');
+    });
 
 });
