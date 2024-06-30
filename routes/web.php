@@ -13,6 +13,7 @@ use App\Http\Controllers\PemakamanController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\BlokPemakamanController;
+use App\Http\Controllers\LaporanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -132,4 +133,6 @@ Route::middleware('auth.user')->group(function () {
         Route::delete('makam/{id}', 'destroy')->name('makam.destroy');
     });
 
+    // Laporan
+    Route::get('laporan', [LaporanController::class, 'index']);
 });

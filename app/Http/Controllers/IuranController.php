@@ -235,15 +235,15 @@ class IuranController extends Controller
         $message = "Yth. *$user->nama_lengkap* iuran terbaru Anda sudah terbit. Silahkan masuk ke dashboard sistem Anda untuk melakukan pembayaran. Terima kasih.";
 
         $data = [
-            'api_key' => '', //isikan API KEY
-            'sender' => '', // isikan NO PENGIRIM
+            'api_key' => 'http://wagateway.ifibernet.id/webhook?key=V8C5BNUFFI&no=62881024008384', //isikan API KEY
+            'sender' => '62881024008384', // isikan NO PENGIRIM
             'number' => $no_hp, // isikan NO TUJUAN
             'message' => $message
         ];
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'http://wa.ifibernet.id/gateway/api/message', //isikan URL GATEWAY
+          CURLOPT_URL => 'http://wagateway.ifibernet.id/gateway/api/message', //isikan URL GATEWAY
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => '',
           CURLOPT_MAXREDIRS => 10,
