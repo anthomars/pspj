@@ -24,13 +24,10 @@
                     <div class="col-12">
                         <div class="invoice p-3 mb-3">
 
-                            <div class="row mt-2">
-                                {{-- @php
-
-                                @endphp --}}
-                                @foreach ($data['iuranPerRw'] as $rw => $laporan)
-                                    <p class="h3 mt-4">{{ $rw }}</p>
-                                    <div class="col-12 table-responsive">
+                            @foreach ($data['iuranPerRw'] as $rw => $laporan)
+                                <div class="card row mt-2 mb-2">
+                                    <p class="h3 mt-2">RW. {{ $rw }}</p>
+                                    <div class="col-12 table-responsive mb-3">
                                         <table class="table table-striped">
                                             <thead>
                                                 <tr>
@@ -51,43 +48,51 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {{-- @php
-
-                                                @endphp --}}
+                                                @php
+                                                    $months = [
+                                                        'January', 'February', 'March', 'April', 'May', 'June',
+                                                        'July', 'August', 'September', 'October', 'November', 'December'
+                                                    ];
+                                                    $totals = array_fill_keys($months, 0);
+                                                @endphp
                                                 @foreach ($laporan as $item)
-                                                    @php
-                                                        print_r($item->nominal_iuran->groupByMonth);
-                                                    @endphp
                                                     <tr>
                                                         <td>{{ $item->user->rt->no_rt }} </td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td>
-
-                                                        </td>
+                                                        @php
+                                                            $total_rt = 0;
+                                                        @endphp
+                                                        @foreach ($months as $month)
+                                                            @php
+                                                                $formatted_month = \Carbon\Carbon::parse($item->date_created)->format('F');
+                                                            @endphp
+                                                            <td>
+                                                                @if ($formatted_month == $month)
+                                                                    {{ number_format($item->nominal_iuran, 0, ',', '.') }}
+                                                                    @php
+                                                                        $total_rt += $item->nominal_iuran;
+                                                                        $totals[$month] += $item->nominal_iuran;
+                                                                    @endphp
+                                                                @else
+                                                                    -
+                                                                @endif
+                                                            </td>
+                                                        @endforeach
+                                                        <td>{{ number_format($total_rt, 0, ',', '.') }}</td>
                                                     </tr>
                                                 @endforeach
-                                                {{-- <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><storng>TOTAL Kotor </storng></td><td><strong>Rp. {{ number_format($subTotalPriceProduct) }}</strong></td></tr>
-                                                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><storng>TOTAL Discount </storng></td><td><strong>Rp. {{ number_format($subTotalDiscountProduct) }}</strong></td></tr> --}}
-                                                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td><storng>TOTAL</storng></td><td><strong>Rp.s</strong></td></tr>
-                                                {{-- @php
 
-                                                @endphp --}}
+                                                <tr>
+                                                    <td><strong>Total</strong></td>
+                                                    @foreach ($months as $month)
+                                                        <td><strong>{{ number_format($totals[$month], 0, ',', '.') }}</strong></td>
+                                                    @endforeach
+                                                    <td><strong>{{ number_format(array_sum($totals), 0, ',', '.') }}</strong></td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                @endforeach
-                            </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>

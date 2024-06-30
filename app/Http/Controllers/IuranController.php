@@ -235,7 +235,7 @@ class IuranController extends Controller
         $message = "Yth. *$user->nama_lengkap* iuran terbaru Anda sudah terbit. Silahkan masuk ke dashboard sistem Anda untuk melakukan pembayaran. Terima kasih.";
 
         $data = [
-            'api_key' => 'http://wagateway.ifibernet.id/webhook?key=V8C5BNUFFI&no=62881024008384', //isikan API KEY
+            'api_key' => 'V8C5BNUFFI', //isikan API KEY
             'sender' => '62881024008384', // isikan NO PENGIRIM
             'number' => $no_hp, // isikan NO TUJUAN
             'message' => $message
