@@ -96,7 +96,7 @@ class PemakamanController extends Controller
            'tgl_pemakaman'          => 'required',
            'jam_pemakaman'          => 'required',
            'nama_biaya'             => 'required|max:100',
-           'nominal_biaya'          => 'required|numeric',
+           'nominal_biaya'          => 'required',
            'status_bayar'           => 'required',
         ];
 
@@ -109,7 +109,6 @@ class PemakamanController extends Controller
             'nama_biaya.required'   => 'Bidang ini wajib di isi',
             'nama_biaya.max'        => 'Maksimal 100 karakter',
             'nominal_biaya.required' => 'Bidang ini wajib di isi',
-            'nominal_biaya.numeric' => 'Hanya boleh di isi angka',
             'status_bayar.required' => 'Pilih salah satu',
         ];
 
@@ -122,6 +121,7 @@ class PemakamanController extends Controller
                 'errors' => $validator->errors()
             ], 400);
         }
+        $validatedData['value'] = str_replace( ',', '', $request->value );
 
         $currentUser = auth()->user()->username;
 
@@ -135,7 +135,7 @@ class PemakamanController extends Controller
             'author_update' => $currentUser,
             'date_created' => date('Y-m-d'),
             'nama_biaya'    => $request->nama_biaya,
-            'nominal_biaya' => $request->nominal_biaya,
+            'nominal_biaya' => str_replace( ',', '', $request->nominal_biaya ),
             'status_bayar'  => $request->status_bayar,
         ];
 
@@ -165,7 +165,7 @@ class PemakamanController extends Controller
            'tgl_pemakaman'          => 'required',
            'jam_pemakaman'          => 'required',
            'nama_biaya'             => 'required|max:100',
-           'nominal_biaya'          => 'required|numeric',
+           'nominal_biaya'          => 'required',
            'status_bayar'           => 'required',
         ];
 
@@ -178,7 +178,6 @@ class PemakamanController extends Controller
             'nama_biaya.required'   => 'Bidang ini wajib di isi',
             'nama_biaya.max'        => 'Maksimal 100 karakter',
             'nominal_biaya.required' => 'Bidang ini wajib di isi',
-            'nominal_biaya.numeric' => 'Hanya boleh di isi angka',
             'status_bayar.required' => 'Pilih salah satu',
         ];
 
@@ -204,7 +203,7 @@ class PemakamanController extends Controller
             'author_update' => $currentUser,
             'date_created' => date('Y-m-d'),
             'nama_biaya'    => $request->nama_biaya,
-            'nominal_biaya' => $request->nominal_biaya,
+            'nominal_biaya' => str_replace( ',', '', $request->nominal_biaya ),
             'status_bayar'  => $request->status_bayar,
         ];
 

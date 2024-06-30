@@ -92,7 +92,7 @@
 
                             <div class="mb-3">
                                 <label for="nominal_biaya">Nominal Biaya</label>
-                                <input type="text" class="form-control" name="nominal_biaya" id="nominal_biaya"  placeholder="Masukan Nominal Biaya">
+                                <input type="text" class="form-control number change_number_format" name="nominal_biaya" id="nominal_biaya"  placeholder="Masukan Nominal Biaya">
                                 <span class="invalid-feedback" id="nominalError"></span>
                                 <small>Isikan dalam format rupiah</small>
                             </div>
@@ -234,5 +234,69 @@
             },
         }));
     });
+</script>
+
+{{-- Number Only --}}
+<script>
+    $('.number').keypress(function(e) {
+        var charCode = (e.which) ? e.which : event.keyCode
+        if (String.fromCharCode(charCode).match(/[^0-9\.]/g)){
+        return false;
+        }
+    });
+
+    function onlyNumber(evt){
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+
+        if (String.fromCharCode(charCode).match(/[^0-9\.]/g)){
+            return false;
+        }
+        return true
+    };
+
+    $('.change_number_format').keyup(function (e) {
+        const value = this.value;
+
+        this.value = changeNumber(value);
+    });
+
+    function changeNumberFormat(e){
+        // console.log(e);
+        const value = e.value;
+
+        e.value = changeNumber(value);
+    }
+
+    function changeNumber(value){
+        var result = '';
+
+        if (value == null || value == '' || value == '.') {
+            return result = null;
+        }
+
+        // Split the value string into an array on each decimal and
+        // count the number of elements in the array
+        const decimalCount = value.split(`.`).length - 1;
+
+        // Don't do anything if a first decimal is entered
+        if (decimalCount === 1) {
+            return result = value;
+        }
+
+        // Remove any commas from the string and convert to a float
+        // This will remove any non digit characters and second decimals
+        const numericVal = parseFloat(value.replace(/,/g, ''));
+
+        //NumberFormat options
+        const options = {
+            style: `decimal`,
+            maximumFractionDigits: 2,
+        };
+
+        // Assign the formatted number to the input box
+        result = new Intl.NumberFormat(`en-US`, options).format(numericVal);
+
+        return result;
+    }
 </script>
 @endpush
