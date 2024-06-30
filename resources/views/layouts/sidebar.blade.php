@@ -264,7 +264,7 @@
           </li>
 
           <div class="d-flex justify-content-center logo-sidebar">
-            <span class="avatar avatar-xl logo-user rounded" id="avatar-xl" style="background-image: url({{ asset('storage/' . appSetting()->logo) }});"></span>
+            <span class="avatar avatar-xl logo-user rounded" id="avatar-xl" style="background-image: url({{ asset('storage/' . appSetting()->logo_apps) }});"></span>
           </div>
         </ul>
       </div>
