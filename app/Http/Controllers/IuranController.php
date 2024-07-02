@@ -230,6 +230,7 @@ class IuranController extends Controller
 
     private function sendWA($user_id, $no_hp)
     {
+        // dd($user_id, $no_hp);
         //Ambil data user
         $user = User::where('id', $user_id)->first();
 
@@ -244,7 +245,7 @@ class IuranController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'http://wagateway.ifibernet.id/gateway/api/message', //isikan URL GATEWAY
+          CURLOPT_URL => 'http://wagateway.ifibernet.id/api/message', //isikan URL GATEWAY
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => '',
           CURLOPT_MAXREDIRS => 10,
