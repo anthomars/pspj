@@ -191,7 +191,7 @@
                         Pengguna
                     </a>
                 @endif
-                @if (Auth::user()->role_id === 4)
+                @if (Auth::user()->role_id === 1 || Auth::user()->role_id === 4)
                     <a class="dropdown-item {{ Request::is('master-data/blok') ? 'active' : '' }}" href="{{ url('master-data/blok') }}" rel="noopener">
                         Blok Pemakaman
                     </a>
@@ -200,7 +200,7 @@
             </div>
           </li>
 
-          @if (Auth::user()->role_id === 4)
+          @if (Auth::user()->role_id === 1 || Auth::user()->role_id === 4)
             <li class="nav-item {{ Request::is('jenazah*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('jenazah') }}">
                     <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
