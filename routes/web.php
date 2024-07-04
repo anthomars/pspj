@@ -96,6 +96,7 @@ Route::middleware('auth.user')->group(function () {
     });
 
     // Jenazah
+    Route::get('jenazah/print', [JenazahController::class, 'print'])->name('jenazah.print');
     Route::get('jenazah/data', [JenazahController::class, 'data'])->name('jenazah.dataTable');
     Route::get('jenazah/get_data', [JenazahController::class, 'getJenazah'])->name('jenazah.getJenazah');
     Route::resource('jenazah', JenazahController::class);

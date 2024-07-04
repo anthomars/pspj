@@ -1,6 +1,6 @@
 @extends('layouts.template-print')
 
-@section('title', 'Print Request Order')
+@section('title', 'Print Pengguna')
 
 @section('content')
     <h1 class="text-center mt-5 mb-5">DATA PENGGUNA PSPJ</h1>

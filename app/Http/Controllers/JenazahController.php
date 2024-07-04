@@ -218,12 +218,19 @@ class JenazahController extends Controller
 
     public function getJenazah()
     {
-        $rw = \App\Models\Jenazah::all();
+        $jenazah = Jenazah::all();
 
         return response()->json([
             'status' => 'success',
-            'data' => $rw
+            'data' => $jenazah
         ]);
+    }
+
+    public function print()
+    {
+        $data['jenazah'] = Jenazah::all();
+
+        return view('pages.jenazah.print', compact('data'));
     }
 
 }
