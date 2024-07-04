@@ -16,24 +16,34 @@
         <div class="col-auto ms-auto d-print-none">
             <div class="btn-list">
               @if(Auth::user()->role_id != 5)
-              <a href="#" id="cronjob_btn" class="btn btn-primary d-none d-sm-inline-block">
-                  <span id="cronjob_btn_text">
-                    <i class="fa-solid fa-arrows-rotate"></i>Generate Iuran Berulang
-                  </span>
-                  <span id="cronjob_loading" style="display:none;">
-                    <i class="fas fa-spinner fa-spin"></i> Sedangg diproses...
-                </span>
-              </a>
+                <a href="{{ route('iuran.print') }}" target="_blank" class="btn btn-default">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-printer me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" />
+                        <path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" />
+                        <path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" />
+                    </svg>
+                    Print
+                </a>
 
-              <a href="{{ route('iuran.create') }}" class="btn btn-primary d-none d-sm-inline-block">
-                <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 5l0 14"></path>
-                <path d="M5 12l14 0"></path>
-                </svg>
-                Tambah Iuran
-            </a>
+                <a href="#" id="cronjob_btn" class="btn btn-primary d-none d-sm-inline-block">
+                    <span id="cronjob_btn_text">
+                        <i class="fa-solid fa-arrows-rotate"></i>Generate Iuran Berulang
+                    </span>
+                    <span id="cronjob_loading" style="display:none;">
+                        <i class="fas fa-spinner fa-spin"></i> Sedang diproses...
+                    </span>
+                </a>
+
+                <a href="{{ route('iuran.create') }}" class="btn btn-primary d-none d-sm-inline-block">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M12 5l0 14"></path>
+                    <path d="M5 12l14 0"></path>
+                    </svg>
+                    Tambah Iuran
+                </a>
             @endif
             </div>
         </div>
@@ -116,12 +126,12 @@
           { data: 'nama_jenazah', name: 'nama_jenazah' },
           { data: 'nama_iuran', name: 'nama_iuran' },
           {
-             data: 'nominal_iuran', 
+             data: 'nominal_iuran',
              name: 'nominal_iuran',
              render: function(data, type, row){
                 var nominal = "Rp. " + new Intl.NumberFormat('id-ID').format(data);
                 return '<span>' + nominal + '</span>';
-                
+
              }
 
           },
@@ -132,7 +142,7 @@
                 var statusClass = data === 'lunas' ? 'text-success' : 'text-danger';
                 return '<span class="text-capitalize ' + statusClass + '">' + data + '</span>';
             }
-          },  
+          },
           { data: 'date_created', name: 'date_created' },
           { data: 'action', name: 'action', orderable: false, searchable: false, width: '20px'},
         ],
@@ -313,7 +323,7 @@
               url: '{{ route("iuran.cronjob_manually") }}',
               type: 'GET',
               data: {
-                  _token: '{{ csrf_token() }}' 
+                  _token: '{{ csrf_token() }}'
               },
               success: function(response) {
                   if(response.status === 'success') {

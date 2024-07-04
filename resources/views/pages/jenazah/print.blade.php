@@ -1,6 +1,6 @@
 @extends('layouts.template-print')
 
-@section('title', 'Print Data Mayitr')
+@section('title', 'Print Data Mayit')
 
 @section('content')
     <h1 class="text-center mt-5 mb-5">DATA Mayit PSPJ</h1>

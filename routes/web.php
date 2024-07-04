@@ -101,12 +101,13 @@ Route::middleware('auth.user')->group(function () {
     Route::get('jenazah/get_data', [JenazahController::class, 'getJenazah'])->name('jenazah.getJenazah');
     Route::resource('jenazah', JenazahController::class);
 
-     //Iuran & Pembayaran
-     Route::prefix('iuran')->group(function(){
+    //Iuran & Pembayaran
+    Route::prefix('iuran')->group(function(){
 
         //Iuran
         Route::controller(IuranController::class)->group(function(){
             Route::get('/', 'index')->name('iuran.index');
+            Route::get('print', 'print')->name('iuran.print');
             Route::get('create', 'create')->name('iuran.create');
             Route::post('create', 'store')->name('iuran.store');
             Route::get('data', 'data')->name('iuran.dataTable');

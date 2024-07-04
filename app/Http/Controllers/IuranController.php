@@ -265,4 +265,10 @@ class IuranController extends Controller
         // dd($response);
     }
 
+    public function print()
+    {
+        $data['iuran'] = Iuran::all();
+
+        return view('pages.iuran.print', compact('data'));
+    }
 }
