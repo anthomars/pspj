@@ -11,8 +11,8 @@
     <head>
         @include('layouts.meta')
         <title>@yield('title') | {{ appSetting()->nama_apps }}</title>
-        <link rel="icon" href="{{ asset('storage/' . appSetting()->logo) }}" type="image/x-icon"/>
-        <link rel="shortcut icon" href="{{ asset('storage/' . appSetting()->logo) }}" type="image/x-icon"/>
+        <link rel="icon" href="{{ asset('storage/' . appSetting()->logo_apps) }}" type="image/x-icon"/>
+        <link rel="shortcut icon" href="{{ asset('storage/' . appSetting()->logo_apps) }}" type="image/x-icon"/>
         <!-- CSS files -->
         @stack('cssTop')
         @include('layouts._css')

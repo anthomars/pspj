@@ -56,6 +56,7 @@ Route::middleware('auth.user')->group(function () {
     });
 
     Route::prefix('user-account')->group(function() {
+        Route::get('print', [UserController::class, 'print'])->name('user.print');
         Route::get('changeStatus', [UserController::class, 'changeStatus'])->name('changeStatusUser');
         Route::get('data', [UserController::class, 'data'])->name('userAccount.dataTable');
         Route::get('', [UserController::class, 'index'])->name('userAccount.index');
@@ -134,6 +135,6 @@ Route::middleware('auth.user')->group(function () {
     });
 
     // Laporan
-    Route::get('laporan/iuran-bulanan', [LaporanController::class, 'iuran_bulanan']);
-    Route::get('laporan/biaya-pemakaman', [LaporanController::class, 'biaya_pemakaman']);
+    Route::get('laporan/iuran-bulanan', [LaporanController::class, 'iuran_bulanan'])->name('laporan.iuran_bulanan');
+    Route::get('laporan/biaya-pemakaman', [LaporanController::class, 'biaya_pemakaman'])->name('laporan.biaya_pemakaman');
 });

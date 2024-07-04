@@ -391,4 +391,11 @@ class UserController extends Controller
             ], 400);
         }
     }
+
+    public function print()
+    {
+        $data['user'] = User::where('is_active', true)->get();
+
+        return view('pages.user.print', compact('data'));
+    }
 }

@@ -15,21 +15,110 @@
 
 <section class="page-body">
     <div class="container-xl">
-        <div class="row">
-            <div class="col-xl-3 col-md-6">
-                <div class="card">
-                    <div class="card-body text-center mt-5">
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-receipt" style="width: 60; height:60;" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2m4 -14h6m-6 4h6m-2 4h2" /></svg>
+        @if (Auth::user()->role_id != 5)
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center mt-5">
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-receipt" style="width: 60; height:60;" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2m4 -14h6m-6 4h6m-2 4h2" /></svg>
+                            </div>
+                            <div>
+                                <h2>Total Kematian Bulan Ini</h2>
+                                <h2>{{ $data['kematian'] }}</h2>
+                            </div>
                         </div>
-                        <div>
-                            <h2>Total Kematian Bulan Ini</h2>
-                            <h2>{{ $data['kematian'] }}</h2>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center mt-5">
+                            <div>
+                                <svg  xmlns="http://www.w3.org/2000/svg"  style="width: 60; height:60;"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-circuit-ammeter"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M5 12h-3" /><path d="M19 12h3" /><path d="M10 14v-3c0 -1.036 .895 -2 2 -2s2 .964 2 2v3" /><path d="M14 12h-4" /></svg>
+                            </div>
+                            <div>
+                                <h2>Blok Tersedia</h2>
+                                @foreach ($data['blok'] as $item)
+                                    @php
+                                        $quota = number_format($item->kapasitas);
+                                        $used = number_format(count($item->pemakaman));
+                                        $left = $quota - $used ;
+
+                                        $text = $left.' / '.$quota;
+                                    @endphp
+                                    <strong>{{ $item->nama_blok_pemakaman . ' : ' . $text}}</strong><br>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center mt-5">
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-receipt" style="width: 60; height:60;" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2m4 -14h6m-6 4h6m-2 4h2" /></svg>
+                            </div>
+                            <div>
+                                <h2>Jumlah Pengguna</h2>
+                                <h2>{{ $data['user'] }}</h2>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center mt-5">
+                            <div>
+                                <svg  xmlns="http://www.w3.org/2000/svg"  style="width: 60; height:60;" viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-cash"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 9m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z" /><path d="M14 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 9v-2a2 2 0 0 0 -2 -2h-10a2 2 0 0 0 -2 2v6a2 2 0 0 0 2 2h2" /></svg>
+                            </div>
+                            <div>
+                                <h2>Iuran</h2>
+                                <h2>Sudah Bayar</h2>
+                                <h5>Bulan Ini</h5>
+                                <h2>{{ $data['iuran_sudah_bayar'] }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center mt-5">
+                            <div>
+                                <svg  xmlns="http://www.w3.org/2000/svg"  style="width: 60; height:60;" viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-cash-off"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 9h6a2 2 0 0 1 2 2v6m-2 2h-10a2 2 0 0 1 -2 -2v-6a2 2 0 0 1 2 -2" /><path d="M12.582 12.59a2 2 0 0 0 2.83 2.826" /><path d="M17 9v-2a2 2 0 0 0 -2 -2h-6m-4 0a2 2 0 0 0 -2 2v6a2 2 0 0 0 2 2h2" /><path d="M3 3l18 18" /></svg>
+                            </div>
+                            <div>
+                                <h2>Iuran</h2>
+                                <h2>Belum Bayar</h2>
+                                <h5>Bulan Ini</h5>
+                                <h2>{{ $data['iuran_belum_bayar'] }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center mt-5">
+                            <div>
+                                <svg  xmlns="http://www.w3.org/2000/svg"  style="width: 60; height:60;"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-cash-banknote"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19 5a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-14a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3zm-7 4a3 3 0 0 0 -2.996 2.85l-.004 .15a3 3 0 1 0 3 -3m6.01 2h-.01a1 1 0 0 0 0 2h.01a1 1 0 0 0 0 -2m-12 0h-.01a1 1 0 1 0 .01 2a1 1 0 0 0 0 -2" /></svg>
+                            </div>
+                            <div>
+                                <h2>Iuran</h2>
+                                <h2>Menunggu Konfirmasi</h2>
+                                <h5>Bulan Ini</h5>
+                                <h2>{{ $data['iuran_tuggu_konfirmasi'] }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @else
+            <h1 class="text-center">Yth Bp./Ibu {{ Auth::user()->nama_lengkap }}, Selamat Datang Di Dashboard PSPJ</h1>
+        @endif
     </div>
 </section>
 
