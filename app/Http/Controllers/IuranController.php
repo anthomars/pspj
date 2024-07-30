@@ -9,6 +9,7 @@ use App\Models\Jenazah;
 use App\Models\Pembayaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
@@ -97,7 +98,7 @@ class IuranController extends Controller
             'user_id'   => 'required|numeric|exists:users,id',
             'jenazah_id' => 'required|numeric|exists:tbl_jenazah,id_jenazah',
             'nama_iuran' => 'required|string|max:100',
-            'nominal_iuran' => 'required|numeric',
+            'nominal_iuran' => 'required',
         ];
 
         $messages = [
@@ -108,7 +109,6 @@ class IuranController extends Controller
             'nama_iuran.string' => 'Format input salah',
             'nama_iuran.max' => 'Maksimal input 100 karakter',
             'nominal_iuran.required' => 'Bidang ini wajib di isi',
-            'nominal_iuran.numeric' => 'Hanya boleh di isi angka',
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -123,7 +123,7 @@ class IuranController extends Controller
 
         $postData = [
             'nama_iuran'        => $request->nama_iuran,
-            'nominal_iuran'     => $request->nominal_iuran,
+            'nominal_iuran'     => str_replace( ',', '', $request->nominal_iuran ),
             'date_created'      => date('Y-m-d'),
             'user_id'           => $request->user_id,
             'jenazah_id'        => $request->jenazah_id,
@@ -149,21 +149,36 @@ class IuranController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $deleteIuran = Iuran::where('id_iuran', $id)->delete();
+        $dataPembayaran = Pembayaran::where('iuran_id', $id)->first();
+        $buktiBayar     = $dataPembayaran->bukti_bayar;
 
-        if($deleteIuran) {
-            return response()->json([
-                'status' => 'success',
-                'title' => 'Sukses',
-                'message'=> 'Hapus berhasil'
-            ]);
-        } else {
+        DB::beginTransaction();
+        try {
+            $filePath = 'public/uploads/images/' . $buktiBayar;
+
+            if (Storage::exists($filePath)) {
+                Storage::delete($filePath);
+            }
+
+            Iuran::where('id_iuran', $id)->delete();
+            Pembayaran::where('iuran_id', $id)->delete();
+        } catch (\Exception $e) {
+            DB::rollback();
+
             return response()->json([
                 'status' => 'error',
                 'title' => 'Gagal!',
                 'message'=> 'Gagal saat menghapus data'
             ], 400);
         }
+
+        DB::commit();
+
+        return response()->json([
+            'status' => 'success',
+            'title' => 'Sukses',
+            'message'=> 'Hapus berhasil'
+        ]);
     }
 
 
