@@ -125,7 +125,8 @@
                                     <form id="updatePembayaranForm" enctype="multipart/form-data">
                                     @csrf
                                         <input type="hidden" value="{{ $iuran->id_iuran }}" name="iuran_id">
-                                        <img src="{{ asset('uploads/images/' . $pembayaran->bukti_bayar) }}" alt="bukti bayar" class="mb-4">
+                                        {{-- <img src="{{ asset('uploads/images/' . $pembayaran->bukti_bayar) }}" alt="bukti bayar" class="mb-4"> --}}
+                                        <img src="{{ asset('storage/' . $pembayaran->bukti_bayar) }}" alt="bukti bayar" class="mb-4">
                                         @if(Auth::user()->role_id != 5 && $iuran->status_bayar != 'lunas')
                                         <button type="submit" class="btn btn-success">Tandai Sebagai Lunas</button>
                                         @endif

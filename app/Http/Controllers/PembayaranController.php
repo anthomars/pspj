@@ -96,16 +96,17 @@ class PembayaranController extends Controller
 
             $image = $request->file('bukti_bayar');
             $imageName = time(). '_' .rand(1000,9999) .'.'.$image->getClientOriginalExtension();
-            $image->move(public_path('uploads/images'), $imageName);
+            // $image->move(public_path('uploads/images'), $imageName);
+            $path = $image->storeAs('bukti_bayar', $imageName, 'public');
 
-            $bukti_bayar = $imageName;
+            // $bukti_bayar = $imageName;
 
 
         $postData = [
             'iuran_id'          => $iuran_id,
             'tgl_bayar'         => $request->tgl_bayar,
             'metode_bayar'      => $request->metode_bayar,
-            'bukti_bayar'       => $bukti_bayar,
+            'bukti_bayar'       => $path,
         ];
 
         $pembayaran = Pembayaran::create($postData);

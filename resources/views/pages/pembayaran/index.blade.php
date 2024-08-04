@@ -104,12 +104,12 @@
           }, width: '50px'  },
           { data: 'nama_iuran', name: 'nama_iuran' },
           {
-             data: 'nominal_iuran', 
+             data: 'nominal_iuran',
              name: 'nominal_iuran',
              render: function(data, type, row){
                 var nominal = "Rp. " + new Intl.NumberFormat('id-ID').format(data);
                 return '<span>' + nominal + '</span>';
-                
+
              }
           },
           { data: 'tgl_bayar', name: 'tgl_bayar' },
@@ -117,7 +117,7 @@
               data: 'metode_bayar',
               name: 'metode_bayar',
               render: function(data, type, row) {
-                var metodeBayar = data === 1 ? 'Tunai' : 'Transfer Bank';
+                var metodeBayar = data === '1' ? 'Tunai' : 'Transfer Bank';
                 return '<span>' + metodeBayar + '</span>';
             }
           },

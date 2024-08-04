@@ -154,11 +154,7 @@ class IuranController extends Controller
 
         DB::beginTransaction();
         try {
-            $filePath = 'public/uploads/images/' . $buktiBayar;
-
-            if (Storage::exists($filePath)) {
-                Storage::delete($filePath);
-            }
+            Storage::disk('public')->delete($buktiBayar);
 
             Iuran::where('id_iuran', $id)->delete();
             Pembayaran::where('iuran_id', $id)->delete();
